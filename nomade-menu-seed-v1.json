@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "categories": {
+    "signature_cocktails": {
+      "nameRu": "Авторские коктейли",
+      "nameEn": "Signature Cocktails",
+      "sortOrder": 10,
+      "items": {
+        "lavender_haze": { "name": "sig_lavender_haze", "nameRu": "Лавандовая дымка", "nameEn": "Lavender Haze", "descRu": "цветочный игристый коктейль с цитрусом и домашним лавандовым сиропом", "descEn": "floral & bubbly delight with citrus and homemade lavender syrup", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "poncha_spritz": { "name": "sig_poncha_spritz", "nameRu": "Понша-спритц", "nameEn": "Poncha Spritz", "descRu": "мадейрский ром, маракуйя, апельсиновый сок и игристое вино", "descEn": "Madeira rum, passion fruit, orange juice & sparkling wine", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "secret_fizz": { "name": "sig_secret_fizz", "nameRu": "Секретный физз", "nameEn": "Secret Fizz", "descRu": "если знаете — знаете; спросите нас", "descEn": "if you know, you know. ask us", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 30 }
+      }
+    },
+    "classic_cocktails": {
+      "nameRu": "Классические коктейли",
+      "nameEn": "Classic Cocktails",
+      "sortOrder": 20,
+      "items": {
+        "aperol_spritz": { "name": "classic_aperol_spritz", "nameRu": "Апероль-спритц", "nameEn": "Aperol Spritz", "descRu": "вечная классика для заката", "descEn": "the timeless sunset drink", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "negroni": { "name": "classic_negroni", "nameRu": "Негрони", "nameEn": "Negroni", "descRu": "насыщенный коктейль с выразительной горечью и джином с Мадейры", "descEn": "bold & bitter, with Gin from Madeira", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "gin_tonic": {
+          "name": "classic_gin_tonic", "nameRu": "Джин-тоник", "nameEn": "Gin & Tonic",
+          "descRu": "свежий и сбалансированный — классический или ароматизированный",
+          "descEn": "crisp & balanced — classic or flavoured",
+          "isGroup": true, "groupKey": "gin_tonic", "isActive": true, "sortOrder": 30,
+          "priceLabelRu": "классический / ароматизированный · €9", "priceLabelEn": "classic / flavoured · €9",
+          "variants": [
+            { "ru": "Классический", "en": "Classic", "name": "gin_tonic_classic", "price": 9 },
+            { "ru": "Ароматизированный", "en": "Flavoured", "name": "gin_tonic_flavoured", "price": 9 }
+          ]
+        }
+      }
+    },
+    "mocktails": {
+      "nameRu": "Безалкогольные коктейли",
+      "nameEn": "Mocktails",
+      "sortOrder": 30,
+      "items": {
+        "secret_soda": { "name": "mock_secret_soda", "nameRu": "Секретная содовая", "nameEn": "Secret Soda", "descRu": "если знаете — знаете; спросите нас", "descEn": "if you know, you know. ask us", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "lavender_mocktail": { "name": "mock_lavender", "nameRu": "Лавандовый моктейль", "nameEn": "Lavender Mocktail", "descRu": "ароматный баланс яркого лимона и нежной лаванды", "descEn": "a fragrant balance of bright lemon and delicate lavender", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "na_gin_tonic": {
+          "name": "mock_na_gin_tonic", "nameRu": "Безалкогольный джин-тоник", "nameEn": "Non Alcoholic Gin & Tonic",
+          "descRu": "безалкогольный джин 0,0%, фруктовое или ягодное пюре, тоник и свежий лайм",
+          "descEn": "0.0% alcohol gin, fruit or berry puree, tonic water, fresh lime",
+          "isGroup": true, "groupKey": "na_gin_tonic", "isActive": true, "sortOrder": 30,
+          "priceLabelRu": "классический / ароматизированный · €9", "priceLabelEn": "classic / flavoured · €9",
+          "variants": [
+            { "ru": "Классический", "en": "Classic", "name": "na_gin_tonic_classic", "price": 9 },
+            { "ru": "Ароматизированный", "en": "Flavoured", "name": "na_gin_tonic_flavoured", "price": 9 }
+          ]
+        }
+      }
+    },
+    "craft_beer": {
+      "nameRu": "Крафтовое пиво",
+      "nameEn": "Craft Beer",
+      "sortOrder": 40,
+      "items": {
+        "passion_fruit_rebendita": { "name": "beer_passion_fruit_rebendita", "nameRu": "Passion Fruit Rebendita 0,33 л", "nameEn": "Passion Fruit Rebendita 0.33 L", "descRu": "IPA с мадейрской маракуйей, Португалия", "descEn": "Madeira passion fruit IPA, Portugal", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "mango_lingo_lingo": { "name": "beer_mango_lingo_lingo", "nameRu": "Mango Lingo Lingo 0,33 л", "nameEn": "Mango Lingo Lingo 0.33 L", "descRu": "Berliner Weisse, Португалия", "descEn": "Berliner Weisse, Portugal", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "vila_maria": { "name": "beer_vila_maria", "nameRu": "Vila Maria 0,33 л", "nameEn": "Vila Maria 0.33 L", "descRu": "светлый эль, Лиссабон", "descEn": "Blonde ale, Lisboa", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "freebird_glutenfree": { "name": "beer_freebird_glutenfree", "nameRu": "Freebird Glutenfree 0,33 л", "nameEn": "Freebird Glutenfree 0.33 L", "descRu": "безглютеновый West Coast IPA, Сан-Себастьян", "descEn": "West Coast IPA, San Sebastian", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "hero_non_alcoholic": { "name": "beer_hero_non_alcoholic", "nameRu": "Hero Non Alcoholic 0,33 л", "nameEn": "Hero Non Alcoholic 0.33 L", "descRu": "безалкогольный Hazy IPA, Сан-Себастьян", "descEn": "Hazy IPA, San Sebastian", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 50 }
+      }
+    },
+    "craft_cider": {
+      "nameRu": "Крафтовый сидр",
+      "nameEn": "Craft Cider",
+      "sortOrder": 50,
+      "items": {
+        "tres_masas_sidrada": { "name": "cider_tres_masas", "nameRu": "Tres Masas Sidrada 0,33 л", "nameEn": "Tres Masas Sidrada 0.33 L", "descRu": "крафтовый яблочный сидр, Португалия", "descEn": "apple craft cider, Portugal", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "perry_sidrada": { "name": "cider_perry", "nameRu": "Perry Sidrada 0,33 л", "nameEn": "Perry Sidrada 0.33 L", "descRu": "крафтовый грушевый сидр, Португалия", "descEn": "pear craft cider, Portugal", "price": 6.5, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "galipette_na": {
+          "name": "cider_galipette_na", "nameRu": "Galipette безалкогольный 0,33 л", "nameEn": "Galipette Non Alcoholic 0.33 L",
+          "descRu": "крафтовый безалкогольный сидр, Франция", "descEn": "craft cider, France",
+          "isGroup": true, "groupKey": "galipette_na", "isActive": true, "sortOrder": 30,
+          "priceLabelRu": "розе / белый · €6,50", "priceLabelEn": "rosé / white · €6.50",
+          "variants": [
+            { "ru": "Розе", "en": "Rosé", "name": "galipette_na_rose", "price": 6.5 },
+            { "ru": "Белый", "en": "White", "name": "galipette_na_white", "price": 6.5 }
+          ]
+        }
+      }
+    },
+    "homemade_lemonades": {
+      "nameRu": "Домашние лимонады",
+      "nameEn": "Homemade Lemonades",
+      "sortOrder": 60,
+      "items": {
+        "red_berries_lemonade": { "name": "lemonade_red_berries", "nameRu": "Лимонад из красных ягод", "nameEn": "Red Berries Lemonade", "descRu": "пюре из красных ягод, свежая мята, лимонный сок и газированная вода", "descEn": "red berries puree, fresh mint, lemon juice, sparkling water", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "passion_fruit_lemonade": { "name": "lemonade_passion_fruit", "nameRu": "Лимонад из маракуйи", "nameEn": "Passion Fruit Lemonade", "descRu": "пюре маракуйи, свежая мята, лимонный сок и газированная вода", "descEn": "passion fruit puree, fresh mint, lemon juice, sparkling water", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 20 }
+      }
+    },
+    "organic_soft_drinks": {
+      "nameRu": "Органические напитки",
+      "nameEn": "Organic Soft Drinks",
+      "sortOrder": 70,
+      "items": {
+        "why_not_pomegranate_cucumber": { "name": "soft_why_not_pomegranate_cucumber", "nameRu": "Why Not Гранат и огурец 0,33 л", "nameEn": "Pomegranate & Cucumber Why Not 0.33 L", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "why_not_natural_cola": { "name": "soft_why_not_natural_cola", "nameRu": "Why Not Натуральная кола 0,33 л", "nameEn": "Natural Cola Why Not 0.33 L", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "why_not_elderflower_yuzu": { "name": "soft_why_not_elderflower_yuzu", "nameRu": "Why Not Бузина и юдзу 0,33 л", "nameEn": "Elderflower & Yuzu Why Not 0.33 L", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 30 }
+      }
+    },
+    "nomade_kombucha": {
+      "nameRu": "Комбуча",
+      "nameEn": "Kombucha",
+      "sortOrder": 80,
+      "items": {
+        "homemade_kombucha": { "name": "kombucha_homemade", "nameRu": "Домашняя комбуча", "nameEn": "Homemade Kombucha", "price": 4, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "aquela_ginger_kombucha": { "name": "kombucha_aquela_ginger", "nameRu": "Комбуча Aquela Имбирь", "nameEn": "Aquela Ginger Kombucha", "price": 4, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "aquela_peppermint_kombucha": { "name": "kombucha_aquela_peppermint", "nameRu": "Комбуча Aquela Перечная мята", "nameEn": "Aquela Peppermint Kombucha", "price": 4, "isGroup": false, "isActive": true, "sortOrder": 30 }
+      }
+    },
+    "nomade_water": {
+      "nameRu": "Вода",
+      "nameEn": "Water",
+      "sortOrder": 90,
+      "items": {
+        "purified_water": {
+          "name": "water_purified", "nameRu": "Очищенная вода", "nameEn": "Purified Water",
+          "isGroup": true, "groupKey": "purified_water", "isActive": true, "sortOrder": 10,
+          "priceLabelRu": "0,7 л / 0,5 л", "priceLabelEn": "0.7 L / 0.5 L",
+          "variants": [
+            { "ru": "0,7 л", "en": "0.7 L", "name": "water_purified_07l", "price": 3.5 },
+            { "ru": "0,5 л", "en": "0.5 L", "name": "water_purified_05l", "price": 2.5 }
+          ]
+        },
+        "san_pellegrino": { "name": "water_san_pellegrino", "nameRu": "Газированная вода San Pellegrino 0,2 л", "nameEn": "San Pellegrino Sparkling Water 0.2 L", "price": 3, "isGroup": false, "isActive": true, "sortOrder": 20 }
+      }
+    },
+    "wine_by_glass": {
+      "nameRu": "Вино по бокалам",
+      "nameEn": "Wine by the Glass",
+      "sortOrder": 100,
+      "items": {
+        "house_wine": {
+          "name": "wineglass_house_wine", "nameRu": "Домашнее вино", "nameEn": "Glass of House Wine",
+          "descRu": "местное вино", "descEn": "local wine",
+          "isGroup": true, "groupKey": "house_wine", "isActive": true, "sortOrder": 10,
+          "priceLabelRu": "белое / розе / красное · €7", "priceLabelEn": "white / rosé / red · €7",
+          "variants": [
+            { "ru": "Белое", "en": "White", "name": "house_wine_white", "price": 7 },
+            { "ru": "Розе", "en": "Rosé", "name": "house_wine_rose", "price": 7 },
+            { "ru": "Красное", "en": "Red", "name": "house_wine_red", "price": 7 }
+          ]
+        },
+        "glass_of_sparkling": { "name": "wineglass_sparkling", "nameRu": "Бокал игристого", "nameEn": "Glass of Sparkling", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 20 }
+      }
+    },
+    "fine_with_wine": {
+      "nameRu": "К вину",
+      "nameEn": "Fine with Wine",
+      "sortOrder": 110,
+      "items": {
+        "bread_cart": { "name": "fww_bread_cart", "nameRu": "Хлебная корзина 🌿", "nameEn": "Bread Cart 🌿", "descRu": "ремесленный хлеб и гриссини со сливочным маслом и насыщенным кремом с травами", "descEn": "artisan bread & grissini with creamy butter & rich herb cream", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "home_marinated_olives": { "name": "fww_olives", "nameRu": "Домашние маринованные оливки 🌿🌿", "nameEn": "Home-Marinated Olives 🌿🌿", "descRu": "отборные зелёные оливки, маринованные с лимоном, мятой и чаем лапсанг", "descEn": "premium green olives marinated with lemon, mint & lapsang tea", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "mortadella_bruschetta": { "name": "fww_mortadella_bruschetta", "nameRu": "Брускетта с мортаделлой", "nameEn": "Mortadella Bruschetta", "descRu": "золотистая бриошь с кремом, оливковой мортаделлой, пармезаном и чёрной солью", "descEn": "golden brioche with cream, olive mortadella, parmesan & black salt", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "prosciutto_bruschetta": { "name": "fww_prosciutto_bruschetta", "nameRu": "Брускетта с прошутто", "nameEn": "Prosciutto Bruschetta", "descRu": "золотистая бриошь с кремом песто, прошутто, грецким орехом и тёмным мёдом", "descEn": "golden brioche with pesto cream, prosciutto, walnut sprinkles & dark honey", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "anchovy_bruschetta": { "name": "fww_anchovy_bruschetta", "nameRu": "Брускетта с анчоусом", "nameEn": "Anchovy Bruschetta", "descRu": "сливочная бриошь с ароматной сальсой и анчоусом", "descEn": "buttery brioche with fragrant salsa & anchovy", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 50 }
+      }
+    },
+    "first_things_first": {
+      "nameRu": "Для начала",
+      "nameEn": "First Things First",
+      "sortOrder": 120,
+      "items": {
+        "salmon_tartare": { "name": "first_salmon_tartare", "nameRu": "Тартар из лосося", "nameEn": "Salmon Tartare", "descRu": "на кремовой основе из авокадо со свежей хрустящей зелёной сальсой и ароматным зелёным маслом", "descEn": "on a creamy avocado base with fresh crunchy green salsa & aromatic green oil", "price": 14, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "caprese": { "name": "first_caprese", "nameRu": "Капрезе 🌿", "nameEn": "Caprese 🌿", "descRu": "свежая моцарелла, сезонный томат и сливочный лимонный соус", "descEn": "fresh mozzarella, seasonal tomato & creamy lemon sauce", "price": 13, "isGroup": false, "isActive": true, "sortOrder": 20 }
+      }
+    },
+    "warm_starters": {
+      "nameRu": "Горячие закуски",
+      "nameEn": "Warm Starters",
+      "sortOrder": 130,
+      "items": {
+        "baked_camembert": { "name": "warm_baked_camembert", "nameRu": "Запечённый камамбер 🌿", "nameEn": "Baked Camembert 🌿", "descRu": "хрустящие орехи, розовый перец и немного вишнёво-мадейрского джема", "descEn": "crunchy nuts, pink peppercorns and a touch of cherry-Madeira jam", "price": 14, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "eggplant_parmigiana": { "name": "warm_eggplant_parmigiana", "nameRu": "Баклажан пармиджана 🌿", "nameEn": "Eggplant Parmigiana 🌿", "descRu": "с насыщенной томатной начинкой, греческим йогуртом и ярким зелёным соусом", "descEn": "with savory tomato filling, greek yogurt and bright green sauce", "price": 14, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "salmon_pie": { "name": "warm_salmon_pie", "nameRu": "Пирог с лососем", "nameEn": "Salmon Pie", "descRu": "на песочной основе с йогуртовым соусом", "descEn": "on sablé and yogurt sauce", "price": 14, "isGroup": false, "isActive": true, "sortOrder": 30 }
+      }
+    },
+    "catch_and_carve": {
+      "nameRu": "Рыба и мясо",
+      "nameEn": "Catch & Carve",
+      "sortOrder": 140,
+      "items": {
+        "local_fish": { "name": "cc_local_fish", "nameRu": "Местная рыба", "nameEn": "Local Fish", "descRu": "с насыщенным соусом биск, нежным нутом и молодым картофелем конфи", "descEn": "with rich bisque sauce, tender chickpeas & baby potato confit", "price": 21, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "baked_salmon": { "name": "cc_baked_salmon", "nameRu": "Запечённый лосось", "nameEn": "Baked Salmon", "descRu": "с сезонными овощами, картофельным пюре, лимонным соусом и ароматным зелёным маслом", "descEn": "with seasonal vegetables, mashed potato, lemon sauce & green fragrant oil", "price": 23, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "beef_medallions": { "name": "cc_beef_medallions", "nameRu": "Медальоны из говядины", "nameEn": "Beef Medallions", "descRu": "говядина с ароматом розмарина, картофельно-фундучное пюре, насыщенный демиглас и грибной соус", "descEn": "rosemary-infused beef with hazelnut mashed potato, rich demi-glace & mushroom sauce", "price": 21, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "roasted_duck": { "name": "cc_roasted_duck", "nameRu": "Запечённая утка", "nameEn": "Roasted Duck", "descRu": "со свекольным пюре с нотами тёмного шоколада, демигласом и вишнёво-мадейрским джемом", "descEn": "with beetroot purée infused with dark chocolate notes, demi-glace & cherry-Madeira jam", "price": 21, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "octopus": { "name": "cc_octopus", "nameRu": "Осьминог", "nameEn": "Octopus", "descRu": "с запечённой паприкой, молодым картофелем конфи, свежей зелёной и яркой красной сальсой", "descEn": "with roasted paprika, baby potato confit, fresh green & bright red salsa", "price": 23, "isGroup": false, "isActive": true, "sortOrder": 50 }
+      }
+    },
+    "leaf_and_crunch": {
+      "nameRu": "Салаты",
+      "nameEn": "Leaf & Crunch",
+      "sortOrder": 150,
+      "items": {
+        "green_salad": { "name": "leaf_green_salad", "nameRu": "Зелёный салат 🌿🌿", "nameEn": "Green Salad 🌿🌿", "descRu": "с хрустящим эндивием и заправкой из маракуйи", "descEn": "with crispy endive and passion fruit dressing", "price": 9, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "caesar_chicken_thigh": { "name": "leaf_caesar_chicken_thigh", "nameRu": "Цезарь с куриным бедром", "nameEn": "Caesar with Chicken Thigh", "descRu": "с хрустящим эндивием и морской эмульсией", "descEn": "with crispy endive lettuce and marine emulsion", "price": 14, "isGroup": false, "isActive": true, "sortOrder": 20 }
+      }
+    },
+    "beyond_pasta": {
+      "nameRu": "Паста и ризотто",
+      "nameEn": "Beyond Pasta",
+      "sortOrder": 160,
+      "items": {
+        "pasta_pulled_beef": { "name": "pasta_pulled_beef", "nameRu": "Паста с томлёной говядиной", "nameEn": "Pasta with Pulled Beef", "descRu": "в насыщенном мясном соусе с пармезаном", "descEn": "in rich meat sauce, topped with parmesan", "price": 16, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "carbonara": { "name": "pasta_carbonara", "nameRu": "Карбонара", "nameEn": "Carbonara", "descRu": "гуанчале, яичные желтки, пармезан и чёрная соль", "descEn": "guanciale, egg yolks, parmesan & black salt", "price": 16, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "truffle_risotto": { "name": "pasta_truffle_risotto", "nameRu": "Трюфельное ризотто 🌿", "nameEn": "Truffle Risotto 🌿", "descRu": "с запечённым камамбером и вешенками в насыщенном сливочном соусе", "descEn": "with baked camembert and oyster mushrooms in a rich cream sauce", "price": 17, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "shrimp_pasta": { "name": "pasta_shrimp", "nameRu": "Паста с креветками", "nameEn": "Shrimp Pasta", "descRu": "обжаренные креветки, насыщенный соус биск и вяленые томаты", "descEn": "sautéed shrimp, rich bisque sauce & sun-dried tomatoes", "price": 16, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "rose_risotto": { "name": "pasta_rose_risotto", "nameRu": "Розовое ризотто", "nameEn": "Rosé Risotto", "descRu": "со свекольным пюре, прошутто, обжаренными грецкими орехами и ароматным зелёным маслом", "descEn": "with beetroot purée, prosciutto, toasted walnuts & fragrant green oil", "price": 17, "isGroup": false, "isActive": true, "sortOrder": 50 },
+        "smoked_eggplant_pasta": { "name": "pasta_smoked_eggplant", "nameRu": "Паста с копчёным баклажаном 🌿🌿", "nameEn": "Pasta with Smoked Eggplant 🌿🌿", "descRu": "сальса из запечённой паприки и изумрудная фисташка", "descEn": "roasted paprika salsa & emerald pistachio", "price": 16, "isGroup": false, "isActive": true, "sortOrder": 60 }
+      }
+    }
+  },
+  "wines": [
+    { "name": "wine_natcool_branco_1l", "nameRu": "Natcool Branco 1L", "nameEn": "Natcool Branco 1L", "descRu": "лёгкое, свежее и питкое", "descEn": "light, fresh and easy-drinking", "price": 29, "menuGroup": "easy_start", "color": "white", "style": "still", "country": "Portugal" },
+    { "name": "wine_natcool_tinto_1l", "nameRu": "Natcool Tinto 1L", "nameEn": "Natcool Tinto 1L", "descRu": "сочное, мягкое и с деликатными танинами", "descEn": "juicy, soft and low in tannins", "price": 29, "menuGroup": "easy_start", "color": "red", "style": "still", "country": "Portugal" },
+    { "name": "wine_sparkling", "nameRu": "Игристое вино", "nameEn": "Sparkling Wine", "descRu": "яркое игристое для любого случая", "descEn": "bright bubbles for any occasion", "price": 28, "menuGroup": "easy_start", "color": "white", "style": "sparkling", "country": "Portugal" },
+    { "name": "wine_white_madeira", "nameRu": "Белое вино с Мадейры", "nameEn": "White Wine from Madeira", "descRu": "свежее, минеральное и гастрономичное", "descEn": "fresh, mineral and food-friendly", "price": 28, "menuGroup": "perfect_pairing", "color": "white", "style": "still", "country": "Portugal", "region": "Madeira" },
+    { "name": "wine_sauvignon_blanc_lisbon", "nameRu": "Совиньон Блан, Лиссабон", "nameEn": "Sauvignon Blanc, Lisbon", "descRu": "тёплое и бархатистое", "descEn": "warm and velvet", "price": 28, "menuGroup": "perfect_pairing", "color": "white", "style": "still", "country": "Portugal", "region": "Lisbon", "grape": "Sauvignon Blanc" },
+    { "name": "wine_rose_madeira", "nameRu": "Розе с Мадейры", "nameEn": "Rosé from Madeira", "descRu": "яркое, минеральное и фруктовое", "descEn": "bright, mineral and fruity", "price": 28, "menuGroup": "perfect_pairing", "color": "rose", "style": "still", "country": "Portugal", "region": "Madeira" },
+    { "name": "wine_red_madeira", "nameRu": "Красное вино с Мадейры", "nameEn": "Red from Madeira", "descRu": "ароматное, элегантное и универсальное", "descEn": "fragrant, elegant and versatile", "price": 28, "menuGroup": "perfect_pairing", "color": "red", "style": "still", "country": "Portugal", "region": "Madeira" },
+    { "name": "wine_green", "nameRu": "Vinho Verde", "nameEn": "Green Wine", "descRu": "яркое и гастрономичное", "descEn": "vibrant and gastronomic", "price": 30, "menuGroup": "perfect_pairing", "color": "green", "style": "still", "country": "Portugal" },
+    { "name": "wine_casters_liebart", "nameRu": "Casters Liébart", "nameEn": "Casters Liébart", "descRu": "Франция, Шампань", "descEn": "France, Champagne", "price": 55, "menuGroup": "something_special", "color": "white", "style": "sparkling", "country": "France", "region": "Champagne" },
+    { "name": "wine_pixie_branco", "nameRu": "Pixie Branco", "nameEn": "Pixie Branco", "descRu": "цветочное, медовое и шелковистое", "descEn": "floral, honeyed and silky", "price": 35, "menuGroup": "found_loved", "color": "white", "style": "still", "country": "Portugal" },
+    { "name": "wine_pixie_tinto", "nameRu": "Pixie Tinto", "nameEn": "Pixie Tinto", "descRu": "бархатистое, тёплое, с ванильными нотами", "descEn": "velvety, warm and vanilla-kissed", "price": 36, "menuGroup": "found_loved", "color": "red", "style": "still", "country": "Portugal" },
+    { "name": "wine_reisling_tejo", "nameRu": "Reisling, Tejo", "nameEn": "Reisling, Tejo", "descRu": "лёгкое и свежее", "descEn": "light and crispy", "price": 35, "menuGroup": "deeper_richer", "color": "white", "style": "still", "country": "Portugal", "region": "Tejo", "grape": "Riesling" },
+    { "name": "wine_chardonnay_douro", "nameRu": "Chardonnay, Douro", "nameEn": "Chardonnay, Douro", "descRu": "тёплое и бархатистое", "descEn": "warm and velvet", "price": 30, "menuGroup": "deeper_richer", "color": "white", "style": "still", "country": "Portugal", "region": "Douro", "grape": "Chardonnay" },
+    { "name": "wine_cabernet_sauvignon_lisbon", "nameRu": "Cabernet Sauvignon, Lisbon", "nameEn": "Cabernet Sauvignon, Lisbon", "descRu": "полнотелое, выразительное, с лёгкими травяными нотами", "descEn": "full-bodied, bold and slightly herbal", "price": 35, "menuGroup": "deeper_richer", "color": "red", "style": "still", "country": "Portugal", "region": "Lisbon", "grape": "Cabernet Sauvignon" },
+    { "name": "wine_pinot_noir_tejo", "nameRu": "Pinot Noir, Tejo", "nameEn": "Pinot Noir, Tejo", "descRu": "мягкое, сочное и лёгкое для восприятия", "descEn": "soft, juicy and easy-going", "price": 35, "menuGroup": "deeper_richer", "color": "red", "style": "still", "country": "Portugal", "region": "Tejo", "grape": "Pinot Noir" },
+    { "name": "wine_pet_nat_white", "nameRu": "Pet Nat Белое", "nameEn": "Pet Nat White", "descRu": "Дору", "descEn": "Douro", "price": 32, "menuGroup": "something_different", "color": "white", "style": "sparkling", "country": "Portugal", "region": "Douro" },
+    { "name": "wine_pet_nat_rose", "nameRu": "Pet Nat Розе", "nameEn": "Pet Nat Rose", "descRu": "Дору", "descEn": "Douro", "price": 32, "menuGroup": "something_different", "color": "rose", "style": "sparkling", "country": "Portugal", "region": "Douro" },
+    { "name": "wine_pet_nat_light_red", "nameRu": "Pet Nat Лёгкое красное", "nameEn": "Pet Nat Light Red", "descRu": "Дору", "descEn": "Douro", "price": 32, "menuGroup": "something_different", "color": "red", "style": "sparkling", "country": "Portugal", "region": "Douro" },
+    { "name": "wine_orange_verde_douro", "nameRu": "Оранжевое вино, Верде/Дору", "nameEn": "Orange Wine, Verde/Douro", "descRu": "текстурное, сухое и немного необычное", "descEn": "textured, dry and slightly unusual", "price": 34, "menuGroup": "something_different", "color": "orange", "style": "still", "country": "Portugal", "region": "Verde/Douro" }
+  ]
+}

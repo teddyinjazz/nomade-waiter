@@ -365,6 +365,19 @@
     } catch(e) {
       console.warn('[displayName] editableSections index build failed:', e);
     }
+    // Seed from wines (bottled-wine subsystem) — nameRu/nameEn are stored separately
+    // from the stable internal `name` slug, so both language forms must be indexed
+    // for the language toggle to correctly re-render existing order lines.
+    try {
+      Object.values(allWines || {}).forEach(w => {
+        const ru = (w.nameRu || w.name || '').trim();
+        const en = (w.nameEn || w.name || '').trim();
+        if (!ru && !en) return;
+        [w.name, ru, en].filter(Boolean).forEach(k => { if (k && !idx[k]) idx[k] = { ru: ru || en, en: en || ru }; });
+      });
+    } catch(e) {
+      console.warn('[displayName] wines index build failed:', e);
+    }
     return idx;
   }
 
@@ -865,7 +878,7 @@
       if (isStopped && !badge) {
         const b = document.createElement('div');
         b.className = 'stop-badge';
-        b.style.cssText = 'font-size:9px;color:#ff6b6b;letter-spacing:1px;margin-top:1px';
+        b.style.cssText = 'font-size:9px;color:var(--nomade-red-bright);letter-spacing:1px;margin-top:1px';
         b.textContent = lang === 'ru' ? 'СТОП' : 'STOP';
         btn.appendChild(b);
       } else if (!isStopped && badge) {
@@ -882,7 +895,7 @@
       if (isStopped && !badge) {
         const b = document.createElement('div');
         b.className = 'stop-badge';
-        b.style.cssText = 'font-size:9px;color:#ff6b6b;letter-spacing:1px;margin-top:1px';
+        b.style.cssText = 'font-size:9px;color:var(--nomade-red-bright);letter-spacing:1px;margin-top:1px';
         b.textContent = lang === 'ru' ? 'СТОП' : 'STOP';
         btn.appendChild(b);
       } else if (!isStopped && badge) {
@@ -913,6 +926,46 @@
   // VARIANT GROUPS — popup выбора варианта
   // =============================================
   const VARIANT_GROUPS = {
+    // Nomade menu v1 popup groups — registered here (in addition to their embedded
+    // item.variants in Firebase) so updateGroupBtn()/restoreGroupBtns() can total the
+    // parent card's item-count badge, matching this codebase's existing convention
+    // for grouped items (see e.g. 'Вареники', 'Пельмени', 'Ризотто' below).
+    'purified_water': {
+      ru: 'Очищенная вода', en: 'Purified Water',
+      variants: [
+        { ru: '0,7 л', en: '0.7 L', name: 'water_purified_07l', price: 3.5 },
+        { ru: '0,5 л', en: '0.5 L', name: 'water_purified_05l', price: 2.5 },
+      ]
+    },
+    'house_wine': {
+      ru: 'Домашнее вино', en: 'Glass of House Wine',
+      variants: [
+        { ru: 'Белое', en: 'White', name: 'house_wine_white', price: 7 },
+        { ru: 'Розе', en: 'Rosé', name: 'house_wine_rose', price: 7 },
+        { ru: 'Красное', en: 'Red', name: 'house_wine_red', price: 7 },
+      ]
+    },
+    'gin_tonic': {
+      ru: 'Джин-тоник', en: 'Gin & Tonic',
+      variants: [
+        { ru: 'Классический', en: 'Classic', name: 'gin_tonic_classic', price: 9 },
+        { ru: 'Ароматизированный', en: 'Flavoured', name: 'gin_tonic_flavoured', price: 9 },
+      ]
+    },
+    'na_gin_tonic': {
+      ru: 'Безалкогольный джин-тоник', en: 'Non Alcoholic Gin & Tonic',
+      variants: [
+        { ru: 'Классический', en: 'Classic', name: 'na_gin_tonic_classic', price: 9 },
+        { ru: 'Ароматизированный', en: 'Flavoured', name: 'na_gin_tonic_flavoured', price: 9 },
+      ]
+    },
+    'galipette_na': {
+      ru: 'Galipette безалкогольный 0,33 л', en: 'Galipette Non Alcoholic 0.33 L',
+      variants: [
+        { ru: 'Розе', en: 'Rosé', name: 'galipette_na_rose', price: 6.5 },
+        { ru: 'Белый', en: 'White', name: 'galipette_na_white', price: 6.5 },
+      ]
+    },
     'Coral Light': {
       ru: 'Coral Light', en: 'Coral Light',
       variants: [
@@ -1196,7 +1249,7 @@
         <span class="var-btn-name">${label}</span>
         <span style="display:flex;align-items:center;gap:6px">
           <span class="var-btn-price">€${v.price}</span>
-          ${isStopped ? `<span style="color:#ff6b6b;font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}
+          ${isStopped ? `<span style="color:var(--nomade-red-bright);font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}
           ${qty > 0 ? `<span class="var-btn-count">${qty}</span>` : ''}
         </span>`;
       btn.onclick = () => {
@@ -1247,7 +1300,7 @@
         const fullDispName = buildVariantDisplayName(grpDisp, label);
         const varBtn = document.createElement('button');
         varBtn.className = 'var-btn' + (isStopped ? ' stopped' : '');
-        varBtn.innerHTML = `<span class="var-btn-name">${label}</span><span style="display:flex;align-items:center;gap:6px"><span class="var-btn-price">€${v.price}</span>${isStopped ? `<span style="color:#ff6b6b;font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}${qty > 0 ? `<span class="var-btn-count">${qty}</span>` : ''}</span>`;
+        varBtn.innerHTML = `<span class="var-btn-name">${label}</span><span style="display:flex;align-items:center;gap:6px"><span class="var-btn-price">€${v.price}</span>${isStopped ? `<span style="color:var(--nomade-red-bright);font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}${qty > 0 ? `<span class="var-btn-count">${qty}</span>` : ''}</span>`;
         varBtn.onclick = () => {
           addItemByVariant(v.name, v.price, fullDispName);
           const newQty = (orders[currentTable] && orders[currentTable][v.name]) ? orders[currentTable][v.name].qty : 0;
@@ -1543,11 +1596,11 @@
       const btn = document.createElement('button');
       const enNames={Рис:'Rice',Овощи:'Vegetables',Спагетти:'Spaghetti',Салат:'Salad',Спаржа:'Asparagus',Пюре:'Mashed potato','Жареный картофель':'Roast potato','Картофель фри':'French fries'};
       if (stopped) {
-        btn.style.cssText = "background:#1a1e1e;border:1px solid rgba(180,30,30,0.5);border-radius:5px;padding:12px 14px;color:#e8f4f2;font-family:'DM Mono',monospace;font-size:13px;cursor:not-allowed;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;opacity:0.45;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
-        btn.innerHTML = `<span style="color:#9ab3ac;font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:#ff6b6b;font-size:9px;letter-spacing:1px">${lang==='ru'?'СТОП':'STOP'}</span>`;
+        btn.style.cssText = "background:var(--nomade-charcoal);border:1px solid rgba(var(--nomade-red-rgb),0.5);border-radius:5px;padding:12px 14px;color:var(--nomade-ivory);font-family:'DM Mono',monospace;font-size:13px;cursor:not-allowed;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;opacity:0.45;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
+        btn.innerHTML = `<span style="color:var(--nomade-muted);font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:var(--nomade-red-bright);font-size:9px;letter-spacing:1px">${lang==='ru'?'СТОП':'STOP'}</span>`;
       } else {
-        btn.style.cssText = "background:#1e302d;border:1px solid #2a9d8f;border-radius:5px;padding:12px 14px;color:#e8f4f2;font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
-        btn.innerHTML = `<span style="color:#ffffff;font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:${isFree?'#3dbfaf':'#e9c46a'};font-size:13px;font-weight:bold">${displayPrice}</span>`;
+        btn.style.cssText = "background:var(--nomade-surface-raised);border:1px solid var(--nomade-green);border-radius:5px;padding:12px 14px;color:var(--nomade-ivory);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
+        btn.innerHTML = `<span style="color:var(--nomade-ivory);font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:${isFree?'var(--nomade-green-bright)':'var(--nomade-orange)'};font-size:13px;font-weight:bold">${displayPrice}</span>`;
         btn.onclick = () => selectSide(side.name, isFree ? 0 : side.price);
       }
       list.appendChild(btn);
@@ -1854,7 +1907,7 @@
           const sideLine = side.price * side.qty;
           total += sideLine; count += side.qty;
           const safeSide = sideKey.replace(/'/g, "\\'");
-          html += `<div class="order-pair"><div class="order-pair-main"><div class="oi-name">${displayName(main.displayName||mainKey, main)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',-1)">−</button><span class="oi-qty">${main.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',1)">+</button></div><div class="oi-price">€${mainLine.toFixed(2)}</div></div><div class="order-pair-side"><div class="oi-name">↳ ${displayName(side.displayName||sideKey, side)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',-1)">−</button><span class="oi-qty">${side.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',1)">+</button></div><div class="oi-price" style="color:${side.price===0?'#3dbfaf':'#e9c46a'}">${side.price===0 ? (lang === 'ru' ? 'вкл.' : 'incl.') : '€' + sideLine.toFixed(2)}</div></div></div>`;
+          html += `<div class="order-pair"><div class="order-pair-main"><div class="oi-name">${displayName(main.displayName||mainKey, main)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',-1)">−</button><span class="oi-qty">${main.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',1)">+</button></div><div class="oi-price">€${mainLine.toFixed(2)}</div></div><div class="order-pair-side"><div class="oi-name">↳ ${displayName(side.displayName||sideKey, side)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',-1)">−</button><span class="oi-qty">${side.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',1)">+</button></div><div class="oi-price" style="color:${side.price===0?'var(--nomade-green-bright)':'var(--nomade-orange)'}">${side.price===0 ? (lang === 'ru' ? 'вкл.' : 'incl.') : '€' + sideLine.toFixed(2)}</div></div></div>`;
         } else {
           html += `<div class="order-item"><div class="oi-name">${displayName(main.displayName||mainKey, main)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',-1)">−</button><span class="oi-qty">${main.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',1)">+</button></div><div class="oi-price">€${mainLine.toFixed(2)}</div></div>`;
         }
@@ -1889,10 +1942,10 @@
       const count = Object.values(tableOrder).reduce((s, i) => s + (i.qty || 0), 0);
       const hasNotes = !!(notes[t] && notes[t].trim().length > 0);
       if (hasNotes) {
-        btn.style.outline = '2px solid #e76f51';
+        btn.style.outline = '2px solid var(--nomade-red)';
         btn.title = '⚠️ Notes' + (count > 0 ? ' + ' + count + (lang === 'ru' ? ' позиций' : ' items') : '');
       } else if (count > 0) {
-        btn.style.outline = '2px solid #e9c46a';
+        btn.style.outline = '2px solid var(--nomade-green-bright)';
         btn.title = count + (lang === 'ru' ? ' позиций' : ' items');
       } else {
         btn.style.outline = '';
@@ -1984,7 +2037,7 @@
             hasNew = true;
             const line = item.price * newQty;
             total += line;
-            lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||mainKey, item)} &nbsp; <span style="color:#e9c46a">€${line.toFixed(2)}</span></div>`;
+            lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||mainKey, item)} &nbsp; <span style="color:var(--nomade-orange)">€${line.toFixed(2)}</span></div>`;
           }
         }
         if (sideKey && tableOrder[sideKey]) {
@@ -1994,7 +2047,7 @@
             hasNew = true;
             const line = item.price * newQty;
             total += line;
-            lines += `<div style="padding-left:12px;color:#7ab3ac">↳ × ${newQty} &nbsp; ${displayName(item.displayName||sideKey, item)} &nbsp; <span style="color:${item.price===0?'#3dbfaf':'#e9c46a'}">${item.price===0?(lang==='ru'?'вкл.':'incl.'):'€'+line.toFixed(2)}</span></div>`;
+            lines += `<div style="padding-left:12px;color:var(--nomade-muted)">↳ × ${newQty} &nbsp; ${displayName(item.displayName||sideKey, item)} &nbsp; <span style="color:${item.price===0?'var(--nomade-green-bright)':'var(--nomade-orange)'}">${item.price===0?(lang==='ru'?'вкл.':'incl.'):'€'+line.toFixed(2)}</span></div>`;
           }
         }
       } else {
@@ -2005,7 +2058,7 @@
           hasNew = true;
           const line = item.price * newQty;
           total += line;
-          lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||name, item)} &nbsp; <span style="color:#e9c46a">€${line.toFixed(2)}</span></div>`;
+          lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||name, item)} &nbsp; <span style="color:var(--nomade-orange)">€${line.toFixed(2)}</span></div>`;
         }
       }
     });
@@ -2021,7 +2074,7 @@
     document.getElementById('sentTable').textContent = (lang==='ru'?'СТОЛ ':'TABLE ') + currentTable;
     const noteText = (notes[currentTable] || '').trim();
     if (noteText) {
-      lines += `<div style="margin-top:8px;color:#e76f51;border-top:1px solid rgba(231,111,81,0.4);padding-top:6px">⚠️ NOTES:<br>${escapeHtml(noteText)}</div>`;
+      lines += `<div style="margin-top:8px;color:var(--nomade-red-bright);border-top:1px solid rgba(var(--nomade-red-rgb),0.4);padding-top:6px">⚠️ NOTES:<br>${escapeHtml(noteText)}</div>`;
     }
     document.getElementById('sentItemsList').innerHTML = lines;
     document.getElementById('sentTotal').textContent = (lang === 'ru' ? 'К переносу: €' : 'To KEEPER: €') + total.toFixed(2);
@@ -2051,22 +2104,37 @@
   // WINES — Firebase Realtime Database
   // =============================================
 
-  const WINE_GROUPS_RU = {
+  // Bottle-wine menu groups (Nomade curated groups — take priority over color/style).
+  const BOTTLE_MENU_GROUPS_RU = {
+    easy_start: 'Лёгкое начало', perfect_pairing: 'Идеальная пара',
+    something_special: 'Для особого случая', found_loved: 'Наши находки',
+    deeper_richer: 'Глубже и насыщеннее', something_different: 'Что-то необычное',
+  };
+  const BOTTLE_MENU_GROUPS_EN = {
+    easy_start: 'Easy Start', perfect_pairing: 'Perfect Pairing',
+    something_special: 'Something Special', found_loved: 'Found & Loved',
+    deeper_richer: 'Deeper & Richer', something_different: 'Something Different',
+  };
+  const BOTTLE_MENU_GROUP_ORDER = ['easy_start','perfect_pairing','something_special','found_loved','deeper_richer','something_different'];
+
+  // Legacy color/style groups — fallback for wines without a curated menuGroup.
+  const WINE_GROUPS_RU = Object.assign({}, BOTTLE_MENU_GROUPS_RU, {
     sparkling: '🥂 Игристое', white: '⚪ Белое', green: '🟢 Зелёное',
     rose: '🌸 Розовое', red: '🔴 Красное', orange: '🟠 Оранжевое',
     fortified: '🍷 Креплёное', dessert: '🍯 Десертное', other: '🍷 Другое',
-  };
-  const WINE_GROUPS_EN = {
+  });
+  const WINE_GROUPS_EN = Object.assign({}, BOTTLE_MENU_GROUPS_EN, {
     sparkling: '🥂 Sparkling', white: '⚪ White', green: '🟢 Green',
     rose: '🌸 Rosé', red: '🔴 Red', orange: '🟠 Orange',
     fortified: '🍷 Fortified', dessert: '🍯 Dessert', other: '🍷 Other',
-  };
-  const WINE_GROUP_ORDER = ['sparkling','white','green','rose','red','orange','fortified','dessert','other'];
+  });
+  const WINE_GROUP_ORDER = BOTTLE_MENU_GROUP_ORDER.concat(['sparkling','white','green','rose','red','orange','fortified','dessert','other']);
 
   let cachedWines = [];
   let allWines = {};
 
   function getWineGroup(wine) {
+    if (wine.menuGroup && BOTTLE_MENU_GROUPS_RU[wine.menuGroup]) return wine.menuGroup;
     if (wine.style === 'sparkling') return 'sparkling';
     if (wine.style === 'fortified') return 'fortified';
     if (wine.style === 'dessert') return 'dessert';
@@ -2074,13 +2142,21 @@
     return ['white','green','red','rose','orange'].includes(c) ? c : 'other';
   }
 
+  function getWineDisplayName(w) {
+    return lang === 'ru' ? (w.nameRu || w.name || '') : (w.nameEn || w.name || '');
+  }
+
+  function getWineDisplayDesc(w) {
+    return lang === 'ru' ? (w.descRu || '') : (w.descEn || '');
+  }
+
   function renderWines(wines) {
     const container = document.getElementById('winesList');
     if (!container) return;
     if (!wines || wines.length === 0) {
       container.innerHTML = lang === 'ru'
-        ? '<div style="color:#7ab3ac;font-size:10px;text-align:center;padding:10px">Нет вин</div>'
-        : '<div style="color:#7ab3ac;font-size:10px;text-align:center;padding:10px">No wines</div>';
+        ? '<div style="color:var(--nomade-muted);font-size:10px;text-align:center;padding:10px">Нет вин</div>'
+        : '<div style="color:var(--nomade-muted);font-size:10px;text-align:center;padding:10px">No wines</div>';
       return;
     }
     const titles = lang === 'ru' ? WINE_GROUPS_RU : WINE_GROUPS_EN;
@@ -2090,23 +2166,33 @@
       if (!groups[g]) groups[g] = [];
       groups[g].push(w);
     });
-    const wineLocale = lang === 'ru' ? 'ru' : 'en';
-    Object.values(groups).forEach(arr => arr.sort((a, b) => (a.name || '').localeCompare(b.name || '', wineLocale, { sensitivity: 'base', numeric: true })));
+    // Curated bottle-wine groups keep their authored (menu) order; legacy color/style
+    // groups keep the previous alphabetical fallback ordering.
+    Object.entries(groups).forEach(([g, arr]) => {
+      if (BOTTLE_MENU_GROUP_ORDER.includes(g)) return;
+      const wineLocale = lang === 'ru' ? 'ru' : 'en';
+      arr.sort((a, b) => (a.name || '').localeCompare(b.name || '', wineLocale, { sensitivity: 'base', numeric: true }));
+    });
     let html = '';
     WINE_GROUP_ORDER.forEach(g => {
       if (!groups[g] || !groups[g].length) return;
       html += `<div class="section-title" style="margin-top:6px">${escapeHtml(titles[g])}</div>`;
       groups[g].forEach(w => {
         const safeName = (w.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        const dispName = getWineDisplayName(w);
+        const safeDisp = dispName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         const price = w.price || 0;
+        const desc = getWineDisplayDesc(w);
         const meta = [w.year, w.country, w.grape].filter(Boolean).join(' · ');
-        const descHtml = meta ? `<div class="item-desc">${escapeHtml(String(meta))}</div>` : '';
-        html += `<button class="item-btn" data-wine-id="${escapeHtml(w.id)}" onclick="addItem(this,'${safeName}',${price})"><div class="item-name">${escapeHtml(w.name || '')}</div>${descHtml}<div class="item-footer"><span class="item-price">€${price}</span><span class="item-count">0</span></div></button>`;
+        const descHtml = desc
+          ? `<div class="item-desc">${escapeHtml(desc)}</div>`
+          : (meta ? `<div class="item-desc">${escapeHtml(String(meta))}</div>` : '');
+        html += `<button class="item-btn" data-wine-id="${escapeHtml(w.id)}" onclick="addItem(this,'${safeName}',${price},'${safeDisp}')"><div class="item-name">${escapeHtml(dispName)}</div>${descHtml}<div class="item-footer"><span class="item-price">€${price}</span><span class="item-count">0</span></div></button>`;
       });
     });
     container.innerHTML = html || (lang === 'ru'
-      ? '<div style="color:#7ab3ac;font-size:10px;text-align:center;padding:10px">Нет вин</div>'
-      : '<div style="color:#7ab3ac;font-size:10px;text-align:center;padding:10px">No wines</div>');
+      ? '<div style="color:var(--nomade-muted);font-size:10px;text-align:center;padding:10px">Нет вин</div>'
+      : '<div style="color:var(--nomade-muted);font-size:10px;text-align:center;padding:10px">No wines</div>');
   }
 
   function loadWines() {
@@ -2116,6 +2202,7 @@
       cachedWines = Object.entries(data)
         .map(([id, wine]) => ({ id, ...wine }))
         .filter(wine => wine.isActive !== false);
+      _displayNameIndex = null;
       renderWines(cachedWines);
       const adminOverlay = document.getElementById('wineAdminOverlay');
       if (adminOverlay && adminOverlay.classList.contains('show')) renderWineAdminList();
@@ -2159,7 +2246,7 @@
       .map(([id, w]) => ({ id, ...w }))
       .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     if (!wines.length) {
-      listEl.innerHTML = '<div style="color:#7ab3ac;font-size:10px;padding:10px 12px">No wines yet — create one below</div>';
+      listEl.innerHTML = '<div style="color:var(--nomade-muted);font-size:10px;padding:10px 12px">No wines yet — create one below</div>';
       return;
     }
     listEl.innerHTML = wines.map(w =>
@@ -2601,7 +2688,7 @@
         return nameA.localeCompare(nameB, locale, { sensitivity: 'base', numeric: true });
       });
     if (!activeItems.length) {
-      container.innerHTML = '<div style="color:#7ab3ac;font-size:10px;text-align:center;padding:10px">' +
+      container.innerHTML = '<div style="color:var(--nomade-muted);font-size:10px;text-align:center;padding:10px">' +
         (lang === 'ru' ? 'Нет позиций' : 'No items') + '</div>';
       restoreMenuVisual();
       restoreGroupBtns();
@@ -2691,7 +2778,9 @@
   function renderCustomCategoriesArea() {
     const area = document.getElementById('customCategoriesArea');
     if (!area) return;
-    const active = Object.entries(customCategories).filter(([, cat]) => cat.isActive !== false);
+    const active = Object.entries(customCategories)
+      .filter(([, cat]) => cat.isActive !== false)
+      .sort(([, a], [, b]) => (a.sortOrder || 0) - (b.sortOrder || 0));
     area.querySelectorAll('.custom-cat-section').forEach(sec => {
       const key = sec.id.replace('customCat_', '');
       if (!customCategories[key] || customCategories[key].isActive === false) sec.remove();
@@ -2769,7 +2858,7 @@
         return nameA.localeCompare(nameB, locale, { sensitivity: 'base', numeric: true });
       });
     if (!activeItems.length) {
-      container.innerHTML = '<div style="color:#7ab3ac;font-size:10px;text-align:center;padding:10px">' +
+      container.innerHTML = '<div style="color:var(--nomade-muted);font-size:10px;text-align:center;padding:10px">' +
         (lang === 'ru' ? 'Нет позиций' : 'No items') + '</div>';
       restoreMenuVisual();
       restoreGroupBtns();
@@ -2806,7 +2895,7 @@
     const entries = Object.entries(customCategories).sort(([, a], [, b]) => (a.sortOrder || 0) - (b.sortOrder || 0));
     if (!entries.length) {
       const empty = document.createElement('div');
-      empty.style.cssText = 'color:#7ab3ac;font-size:10px;padding:10px 12px';
+      empty.style.cssText = 'color:var(--nomade-muted);font-size:10px;padding:10px 12px';
       empty.textContent = lang === 'ru' ? 'Нет категорий' : 'No categories yet';
       listEl.appendChild(empty);
       return;
@@ -3173,7 +3262,7 @@
     const items = editableSections[currentMenuItemAdminSection] || {};
     const sorted = Object.entries(items).sort(([, a], [, b]) => (a.sortOrder || 0) - (b.sortOrder || 0));
     if (!sorted.length) {
-      listEl.innerHTML = '<div style="color:#7ab3ac;font-size:10px;padding:10px 12px">No items yet — create one below</div>';
+      listEl.innerHTML = '<div style="color:var(--nomade-muted);font-size:10px;padding:10px 12px">No items yet — create one below</div>';
       return;
     }
     listEl.innerHTML = sorted.map(([id, item]) => {
@@ -3466,6 +3555,85 @@
   }
 
   // =============================================
+  // NOMADE MENU V1 — SAFE ONE-TIME SEED
+  // Source of truth: nomade-menu-seed-v1.json (16 regular categories via the
+  // custom-category subsystem + 19 bottled wines via the wines subsystem).
+  // Marker: /meta/nomadeMenuSeedVersion — seeds at most once, never overwrites
+  // an existing non-empty menu, and writes everything in one atomic update.
+  // =============================================
+  function seedNomadeMenuIfEmpty() {
+    db.ref('meta/nomadeMenuSeedVersion').once('value', markerSnap => {
+      if (markerSnap.val()) {
+        console.log('[NomadeSeed] marker already set — skipping seed.');
+        return;
+      }
+      fetch('nomade-menu-seed-v1.json')
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(seedData => {
+          Promise.all([
+            db.ref('menuCategories').once('value'),
+            db.ref('menuSections').once('value'),
+            db.ref('wines').once('value'),
+            db.ref('meta/nomadeMenuSeedVersion').once('value'),
+          ]).then(([catsSnap, sectionsSnap, winesSnap, markerSnap2]) => {
+            if (markerSnap2.val()) {
+              console.log('[NomadeSeed] marker set by another device meanwhile — skipping.');
+              return;
+            }
+            const existingCats = catsSnap.val() || {};
+            const existingSections = sectionsSnap.val() || {};
+            const existingWines = winesSnap.val() || {};
+            const targetCatKeys = Object.keys(seedData.categories || {});
+            const hasCatConflict = targetCatKeys.some(k => existingCats[k]);
+            const hasSectionConflict = targetCatKeys.some(k =>
+              existingSections[k] && existingSections[k].items && Object.keys(existingSections[k].items).length > 0);
+            const hasWineConflict = Object.keys(existingWines).length > 0;
+            if (hasCatConflict || hasSectionConflict || hasWineConflict) {
+              console.warn('[NomadeSeed] Non-empty menu detected at target paths — aborting to avoid overwrite.');
+              return;
+            }
+
+            const now = Date.now();
+            const updates = {};
+            let categoryCount = 0, itemCount = 0, wineCount = 0;
+
+            Object.entries(seedData.categories || {}).forEach(([catKey, cat]) => {
+              updates['menuCategories/' + catKey] = {
+                nameRu: cat.nameRu, nameEn: cat.nameEn,
+                isActive: true, isCustom: true,
+                sortOrder: cat.sortOrder, createdAt: now, updatedAt: now,
+              };
+              categoryCount++;
+              Object.entries(cat.items || {}).forEach(([itemId, item]) => {
+                updates['menuSections/' + catKey + '/items/' + itemId] =
+                  Object.assign({}, item, { createdAt: now, updatedAt: now });
+                itemCount++;
+              });
+            });
+
+            (seedData.wines || []).forEach(wine => {
+              const wineRef = db.ref('wines').push();
+              updates['wines/' + wineRef.key] =
+                Object.assign({}, wine, { isActive: true, createdAt: now, updatedAt: now });
+              wineCount++;
+            });
+
+            updates['meta/nomadeMenuSeedVersion'] = seedData.version || 1;
+
+            db.ref().update(updates).then(() => {
+              writeAudit('MENU_SEEDED', {
+                version: seedData.version || 1,
+                categoryCount, itemCount, wineCount,
+              });
+              console.log('[NomadeSeed] Seed complete:', categoryCount, 'categories,', itemCount, 'items,', wineCount, 'wines.');
+            }).catch(e => console.error('[NomadeSeed] atomic write failed:', e));
+          });
+        })
+        .catch(e => console.error('[NomadeSeed] fetch/parse of nomade-menu-seed-v1.json failed:', e));
+    });
+  }
+
+  // =============================================
   // ONE-TIME MIGRATION: stoplist 0-based semantics
   // Marker: /stoplistMeta/migrations/zeroBasedV1
   // Old: qty 1 = stop. New: qty 0 = stop.
@@ -3615,10 +3783,9 @@
       initEditableSectionLongPress(key);
       initEditableSectionItemLongPress(key);
     });
-    // NOMADE: The Top's menu auto-seed/sync calls are disabled so this app does not
-    // write The Top's production menu into the (intentionally empty) Nomade database.
-    // The full Nomade menu will be uploaded later in one controlled import.
-    // The functions themselves are left intact (menu-management/import code is preserved).
+    // NOMADE: The Top's menu auto-seed/sync calls stay disabled so this app never
+    // writes The Top's production menu into the Nomade database. The generic
+    // menu-management/import code itself is preserved, untouched.
     // seedEditableMenuSectionsIfEmpty();
     // syncSoftGroupItemsIfMissing();
     // syncCoffeeGroupItemsIfMissing();
@@ -3630,6 +3797,10 @@
     // seedPastaGroupToPasta();
     // seedPinaColadaToCocktails();
     loadCustomCategories();
+    // Nomade menu v1 — controlled one-time import (categories + items + bottled wines).
+    // Safe by construction: seeds only if /meta/nomadeMenuSeedVersion is unset and the
+    // target category/wine paths are empty; never overwrites existing data.
+    seedNomadeMenuIfEmpty();
 
     const logoArea = document.getElementById('appLogoArea');
     if (logoArea) {

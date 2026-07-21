@@ -13,117 +13,135 @@
 </script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0e1a17; color: #e8f4f2; font-family: 'DM Mono', monospace, 'Courier New', monospace; font-size: 12px; min-height: 100vh; }
+:root {
+  /* Nomade colour identity — replaces The Top's turquoise/gold theme. */
+  --nomade-green: #789818;
+  --nomade-green-bright: #A4C33A;
+  --nomade-orange: #E85020;
+  --nomade-red: #A01818;
+  --nomade-red-bright: #FF5C5C;
+  --nomade-ivory: #F5F0E6;
+  --nomade-charcoal: #101611;
+  --nomade-surface: #172019;
+  --nomade-surface-raised: #1D2920;
+  --nomade-muted: #AEB6A4;
+  --nomade-green-rgb: 120, 152, 24;
+  --nomade-green-bright-rgb: 164, 195, 58;
+  --nomade-orange-rgb: 232, 80, 32;
+  --nomade-red-rgb: 160, 24, 24;
+}
+body { background: var(--nomade-charcoal); color: var(--nomade-ivory); font-family: 'DM Mono', monospace, 'Courier New', monospace; font-size: 12px; min-height: 100vh; }
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Mono:wght@400;500&display=swap');
 
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; background: #162320;
-  border-bottom: 1px solid rgba(42,157,143,0.25); flex-shrink: 0;
+  padding: 10px 16px; background: var(--nomade-surface);
+  border-bottom: 1px solid rgba(var(--nomade-green-rgb),0.25); flex-shrink: 0;
   gap: 12px; flex-wrap: wrap;
 }
 .topbar-logo {
   font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600;
-  color: #3dbfaf; letter-spacing: 2px; white-space: nowrap; flex-shrink: 0;
+  color: var(--nomade-green-bright); letter-spacing: 2px; white-space: nowrap; flex-shrink: 0;
 }
-.topbar-logo span { color: #e9c46a; }
-.topbar-sub { font-size: 10px; color: #7ab3ac; letter-spacing: 1.5px; text-transform: uppercase; }
+.topbar-logo span { color: var(--nomade-orange); }
+.topbar-sub { font-size: 10px; color: var(--nomade-muted); letter-spacing: 1.5px; text-transform: uppercase; }
 
 .controls {
   display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px;
-  background: #111e1c; border-bottom: 1px solid rgba(42,157,143,0.15);
+  background: var(--nomade-charcoal); border-bottom: 1px solid rgba(var(--nomade-green-rgb),0.15);
 }
 .controls input {
-  background: #1e302d; border: 1px solid rgba(42,157,143,0.25); border-radius: 4px;
-  color: #e8f4f2; font-family: inherit; font-size: 11px; padding: 5px 9px;
+  background: var(--nomade-surface-raised); border: 1px solid rgba(var(--nomade-green-rgb),0.25); border-radius: 4px;
+  color: var(--nomade-ivory); font-family: inherit; font-size: 11px; padding: 5px 9px;
   outline: none; min-width: 120px; flex: 1;
 }
-.controls input:focus { border-color: #2a9d8f; }
-.controls input::placeholder { color: rgba(122,179,172,0.4); }
+.controls input:focus { border-color: var(--nomade-green); }
+.controls input::placeholder { color: rgba(var(--nomade-green-bright-rgb),0.5); }
 .btn-clear-filters {
-  background: #253b37; border: 1px solid rgba(42,157,143,0.25); border-radius: 4px;
-  color: #7ab3ac; font-family: inherit; font-size: 11px; padding: 5px 12px;
+  background: var(--nomade-surface-raised); border: 1px solid rgba(var(--nomade-green-rgb),0.25); border-radius: 4px;
+  color: var(--nomade-muted); font-family: inherit; font-size: 11px; padding: 5px 12px;
   cursor: pointer; letter-spacing: 0.5px; flex-shrink: 0;
 }
-.btn-clear-filters:hover { border-color: #2a9d8f; color: #3dbfaf; }
+.btn-clear-filters:hover { border-color: var(--nomade-green); color: var(--nomade-green-bright); }
 .btn-test-write {
-  background: #1a2e2b; border: 1px solid rgba(42,157,143,0.3); border-radius: 4px;
-  color: #7ab3ac; font-family: inherit; font-size: 11px; padding: 5px 12px;
+  background: var(--nomade-surface-raised); border: 1px solid rgba(var(--nomade-green-rgb),0.3); border-radius: 4px;
+  color: var(--nomade-muted); font-family: inherit; font-size: 11px; padding: 5px 12px;
   cursor: pointer; letter-spacing: 0.5px; flex-shrink: 0;
 }
-.btn-test-write:hover { border-color: #2a9d8f; color: #3dbfaf; }
+.btn-test-write:hover { border-color: var(--nomade-green); color: var(--nomade-green-bright); }
 .btn-test-write:disabled { opacity: 0.5; cursor: default; }
 
 .event-list { padding: 6px 8px; }
 .empty-state {
-  text-align: center; padding: 60px 20px; color: #7ab3ac;
+  text-align: center; padding: 60px 20px; color: var(--nomade-muted);
   font-size: 11px; letter-spacing: 1px;
 }
 
 .error-block {
-  background: rgba(231,111,81,0.08); border: 1px solid rgba(231,111,81,0.35);
+  background: rgba(var(--nomade-red-rgb),0.08); border: 1px solid rgba(var(--nomade-red-rgb),0.35);
   border-radius: 6px; margin: 20px 12px; padding: 16px 18px;
 }
-.error-title  { color: #e76f51; font-size: 13px; font-weight: 500; margin-bottom: 10px; letter-spacing: 0.5px; }
-.error-detail { color: #c0d8d4; font-size: 11px; margin-bottom: 4px; }
-.error-hint   { color: #e9c46a; font-size: 10px; margin-top: 10px; letter-spacing: 0.3px; line-height: 1.5; }
+.error-title  { color: var(--nomade-red-bright); font-size: 13px; font-weight: 500; margin-bottom: 10px; letter-spacing: 0.5px; }
+.error-detail { color: var(--nomade-ivory); font-size: 11px; margin-bottom: 4px; }
+.error-hint   { color: var(--nomade-orange); font-size: 10px; margin-top: 10px; letter-spacing: 0.3px; line-height: 1.5; }
 
 .event-row {
-  border: 1px solid rgba(42,157,143,0.12); border-radius: 5px;
+  border: 1px solid rgba(var(--nomade-green-rgb),0.12); border-radius: 5px;
   margin-bottom: 4px; cursor: pointer; overflow: hidden;
   transition: border-color 0.15s;
 }
-.event-row:hover { border-color: rgba(42,157,143,0.35); }
+.event-row:hover { border-color: rgba(var(--nomade-green-rgb),0.35); }
 .event-main {
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
-  padding: 6px 10px; background: #162320;
+  padding: 6px 10px; background: var(--nomade-surface);
 }
-.event-time  { font-size: 10px; color: #7ab3ac; flex-shrink: 0; white-space: nowrap; }
-.event-device { font-size: 11px; color: #e9c46a; font-weight: 500; flex-shrink: 0; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.event-id    { font-size: 9px; color: rgba(122,179,172,0.55); flex-shrink: 0; white-space: nowrap; }
-.event-table { background: rgba(42,157,143,0.15); color: #3dbfaf; font-size: 9px; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; letter-spacing: 0.5px; }
-.event-summary { font-size: 11px; color: #c0d8d4; flex: 1; min-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.event-time  { font-size: 10px; color: var(--nomade-muted); flex-shrink: 0; white-space: nowrap; }
+.event-device { font-size: 11px; color: var(--nomade-orange); font-weight: 500; flex-shrink: 0; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.event-id    { font-size: 9px; color: rgba(var(--nomade-green-bright-rgb),0.55); flex-shrink: 0; white-space: nowrap; }
+.event-table { background: rgba(var(--nomade-green-rgb),0.15); color: var(--nomade-green-bright); font-size: 9px; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; letter-spacing: 0.5px; }
+.event-summary { font-size: 11px; color: var(--nomade-ivory); flex: 1; min-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .event-action {
   font-size: 9px; letter-spacing: 0.8px; padding: 2px 6px; border-radius: 3px;
   flex-shrink: 0; text-transform: uppercase; font-weight: 500;
 }
-.action-order_add         { background: rgba(61,191,175,0.15); color: #3dbfaf; border: 1px solid rgba(61,191,175,0.3); }
-.action-order_qty_change  { background: rgba(61,191,175,0.08); color: #7ab3ac; border: 1px solid rgba(61,191,175,0.2); }
-.action-order_clear       { background: rgba(231,111,81,0.12); color: #e76f51; border: 1px solid rgba(231,111,81,0.3); }
-.action-table_checkout    { background: rgba(233,196,106,0.20); color: #e9c46a; border: 1px solid rgba(233,196,106,0.45); }
-.action-send_to_keeper    { background: rgba(233,196,106,0.15); color: #e9c46a; border: 1px solid rgba(233,196,106,0.3); }
-.action-app_open          { background: rgba(42,157,143,0.12); color: #2a9d8f; border: 1px solid rgba(42,157,143,0.25); }
-.action-device_created    { background: rgba(138,43,226,0.12); color: #c084fc; border: 1px solid rgba(138,43,226,0.25); }
-.action-device_named      { background: rgba(138,43,226,0.10); color: #b06be0; border: 1px solid rgba(138,43,226,0.2); }
-.action-device_rename     { background: rgba(138,43,226,0.08); color: #9b59c0; border: 1px solid rgba(138,43,226,0.2); }
-.action-menu_item_create  { background: rgba(61,191,175,0.12); color: #3dbfaf; border: 1px solid rgba(61,191,175,0.25); }
-.action-menu_item_update  { background: rgba(42,157,143,0.10); color: #7ab3ac; border: 1px solid rgba(42,157,143,0.2); }
-.action-menu_item_disable { background: rgba(231,111,81,0.10); color: #e76f51; border: 1px solid rgba(231,111,81,0.25); }
-.action-menu_item_reactivate      { background: rgba(61,191,175,0.12); color: #3dbfaf; border: 1px solid rgba(61,191,175,0.25); }
-.action-menu_item_variants_update { background: rgba(42,157,143,0.10); color: #7ab3ac; border: 1px solid rgba(42,157,143,0.2); }
-.action-wine_create       { background: rgba(233,196,106,0.10); color: #d4a838; border: 1px solid rgba(233,196,106,0.25); }
-.action-wine_update       { background: rgba(233,196,106,0.08); color: #b8963c; border: 1px solid rgba(233,196,106,0.18); }
-.action-wine_disable      { background: rgba(231,111,81,0.10); color: #e76f51; border: 1px solid rgba(231,111,81,0.22); }
-.action-wine_reactivate   { background: rgba(233,196,106,0.10); color: #d4a838; border: 1px solid rgba(233,196,106,0.25); }
-.action-stoplist_change   { background: rgba(180,30,30,0.12); color: #ff8080; border: 1px solid rgba(180,30,30,0.3); }
-.action-stoplist_clear    { background: rgba(180,30,30,0.18); color: #ff6060; border: 1px solid rgba(180,30,30,0.4); }
-.action-notes_update      { background: rgba(122,179,172,0.10); color: #7ab3ac; border: 1px solid rgba(122,179,172,0.2); }
-.action-audit_test        { background: rgba(42,157,143,0.10); color: #2a9d8f; border: 1px solid rgba(42,157,143,0.25); }
+.action-order_add         { background: rgba(var(--nomade-green-bright-rgb),0.15); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-bright-rgb),0.3); }
+.action-order_qty_change  { background: rgba(var(--nomade-green-bright-rgb),0.08); color: var(--nomade-muted); border: 1px solid rgba(var(--nomade-green-bright-rgb),0.2); }
+.action-order_clear       { background: rgba(var(--nomade-red-rgb),0.12); color: var(--nomade-red-bright); border: 1px solid rgba(var(--nomade-red-rgb),0.3); }
+.action-table_checkout    { background: rgba(var(--nomade-orange-rgb),0.20); color: var(--nomade-orange); border: 1px solid rgba(var(--nomade-orange-rgb),0.45); }
+.action-send_to_keeper    { background: rgba(var(--nomade-orange-rgb),0.15); color: var(--nomade-orange); border: 1px solid rgba(var(--nomade-orange-rgb),0.3); }
+.action-app_open          { background: rgba(var(--nomade-green-rgb),0.12); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-rgb),0.25); }
+.action-device_created    { background: rgba(var(--nomade-green-rgb),0.12); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-rgb),0.25); }
+.action-device_named      { background: rgba(var(--nomade-green-rgb),0.10); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-rgb),0.2); }
+.action-device_rename     { background: rgba(var(--nomade-green-rgb),0.08); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-rgb),0.2); }
+.action-menu_item_create  { background: rgba(var(--nomade-green-bright-rgb),0.12); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-bright-rgb),0.25); }
+.action-menu_item_update  { background: rgba(var(--nomade-green-rgb),0.10); color: var(--nomade-muted); border: 1px solid rgba(var(--nomade-green-rgb),0.2); }
+.action-menu_item_disable { background: rgba(var(--nomade-red-rgb),0.10); color: var(--nomade-red-bright); border: 1px solid rgba(var(--nomade-red-rgb),0.25); }
+.action-menu_item_reactivate      { background: rgba(var(--nomade-green-bright-rgb),0.12); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-bright-rgb),0.25); }
+.action-menu_item_variants_update { background: rgba(var(--nomade-green-rgb),0.10); color: var(--nomade-muted); border: 1px solid rgba(var(--nomade-green-rgb),0.2); }
+.action-MENU_SEEDED       { background: rgba(var(--nomade-green-rgb),0.18); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-rgb),0.4); }
+.action-wine_create       { background: rgba(var(--nomade-orange-rgb),0.10); color: var(--nomade-orange); border: 1px solid rgba(var(--nomade-orange-rgb),0.25); }
+.action-wine_update       { background: rgba(var(--nomade-orange-rgb),0.08); color: var(--nomade-orange); border: 1px solid rgba(var(--nomade-orange-rgb),0.18); }
+.action-wine_disable      { background: rgba(var(--nomade-red-rgb),0.10); color: var(--nomade-red-bright); border: 1px solid rgba(var(--nomade-red-rgb),0.22); }
+.action-wine_reactivate   { background: rgba(var(--nomade-orange-rgb),0.10); color: var(--nomade-orange); border: 1px solid rgba(var(--nomade-orange-rgb),0.25); }
+.action-stoplist_change   { background: rgba(var(--nomade-red-rgb),0.12); color: var(--nomade-red-bright); border: 1px solid rgba(var(--nomade-red-rgb),0.3); }
+.action-stoplist_clear    { background: rgba(var(--nomade-red-rgb),0.18); color: var(--nomade-red-bright); border: 1px solid rgba(var(--nomade-red-rgb),0.4); }
+.action-notes_update      { background: rgba(var(--nomade-green-bright-rgb),0.10); color: var(--nomade-muted); border: 1px solid rgba(var(--nomade-green-bright-rgb),0.2); }
+.action-audit_test        { background: rgba(var(--nomade-green-rgb),0.10); color: var(--nomade-green-bright); border: 1px solid rgba(var(--nomade-green-rgb),0.25); }
 
 .event-detail {
-  background: #0e1a17; border-top: 1px solid rgba(42,157,143,0.1);
+  background: var(--nomade-charcoal); border-top: 1px solid rgba(var(--nomade-green-rgb),0.1);
   padding: 8px 12px;
 }
 .event-detail pre {
-  font-size: 10px; color: #7ab3ac; white-space: pre-wrap; word-break: break-word;
+  font-size: 10px; color: var(--nomade-muted); white-space: pre-wrap; word-break: break-word;
   line-height: 1.5;
 }
 
 .status-bar {
-  padding: 6px 12px; font-size: 10px; color: rgba(122,179,172,0.55);
-  letter-spacing: 0.5px; border-top: 1px solid rgba(42,157,143,0.12);
-  position: sticky; bottom: 0; background: #0e1a17;
+  padding: 6px 12px; font-size: 10px; color: rgba(var(--nomade-green-bright-rgb),0.55);
+  letter-spacing: 0.5px; border-top: 1px solid rgba(var(--nomade-green-rgb),0.12);
+  position: sticky; bottom: 0; background: var(--nomade-charcoal);
 }
 </style>
 </head>
@@ -134,7 +152,7 @@ body { background: #0e1a17; color: #e8f4f2; font-family: 'DM Mono', monospace, '
     <div class="topbar-logo">NOMADE</div>
     <div class="topbar-sub">Audit Log</div>
   </div>
-  <div id="statusText" style="font-size:10px;color:#7ab3ac;letter-spacing:0.5px">Loading audit log...</div>
+  <div id="statusText" style="font-size:10px;color:var(--nomade-muted);letter-spacing:0.5px">Loading audit log...</div>
 </div>
 
 <div class="controls">
@@ -144,7 +162,7 @@ body { background: #0e1a17; color: #e8f4f2; font-family: 'DM Mono', monospace, '
   <input id="filterSearch"  placeholder="Search all fields..." />
   <button class="btn-clear-filters" onclick="clearFilters()">✕ Clear</button>
   <button class="btn-test-write" id="testWriteBtn" onclick="writeTestEvent()">Write test event</button>
-  <div id="testWriteNotice" style="display:none;background:rgba(231,111,81,0.10);border:1px solid rgba(231,111,81,0.3);border-radius:4px;padding:6px 10px;font-size:10px;color:#e76f51;letter-spacing:0.3px;flex-basis:100%"></div>
+  <div id="testWriteNotice" style="display:none;background:rgba(var(--nomade-red-rgb),0.10);border:1px solid rgba(var(--nomade-red-rgb),0.3);border-radius:4px;padding:6px 10px;font-size:10px;color:var(--nomade-red-bright);letter-spacing:0.3px;flex-basis:100%"></div>
 </div>
 
 <div class="event-list" id="eventList"></div>
@@ -176,6 +194,7 @@ const ACTION_LABELS = {
   stoplist_clear:            { ru: 'Стоп-лист очищен',            en: 'Stop list cleared' },
   notes_update:              { ru: 'Заметки обновлены',           en: 'Notes updated' },
   audit_test:                { ru: 'Тест записи',                  en: 'Test event' },
+  MENU_SEEDED:               { ru: 'Меню загружено',              en: 'Menu seeded' },
 };
 
 function getActionLabel(action) {
@@ -237,6 +256,9 @@ function getPayloadSummary(action, payload) {
         return 'Table ' + payload.table;
       case 'audit_test':
         return payload.source || 'audit.html';
+      case 'MENU_SEEDED':
+        return 'v' + payload.version + ' · ' + payload.categoryCount + ' cat · ' +
+          payload.itemCount + ' items · ' + payload.wineCount + ' wines';
       default:
         return JSON.stringify(payload).slice(0, 80);
     }
@@ -281,7 +303,7 @@ function renderEvents() {
     const shortId  = escH((e.deviceId || '').slice(0, 12));
     const safeKey  = escH(e._key);
     const tableTag = e.table ? `<span class="event-table">T${escH(String(e.table))}</span>` : '';
-    const actionCls = 'action-' + (e.action || '').replace(/[^a-z_]/g, '');
+    const actionCls = 'action-' + (e.action || '').replace(/[^a-zA-Z_]/g, '');
     return `<div class="event-row" onclick="toggleDetail('${safeKey}')">
   <div class="event-main">
     <span class="event-time">${escH(formatTime(e.createdAt))}</span>
@@ -345,7 +367,7 @@ db.ref('auditLog').orderByChild('createdAt').limitToLast(500).on('value', snapsh
     .map(([key, e]) => ({ ...e, _key: key }))
     .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   const st = document.getElementById('statusText');
-  st.style.color = '#7ab3ac';
+  st.style.color = 'var(--nomade-muted)';
   st.textContent = allEvents.length === 0
     ? 'Connected · no events'
     : allEvents.length + ' event' + (allEvents.length !== 1 ? 's' : '') + ' · live';
@@ -355,7 +377,7 @@ db.ref('auditLog').orderByChild('createdAt').limitToLast(500).on('value', snapsh
   const msg  = err.message || String(err);
   console.error('[audit.html] Firebase read error on /auditLog:', code, msg);
   const st = document.getElementById('statusText');
-  st.style.color = '#e76f51';
+  st.style.color = 'var(--nomade-red-bright)';
   st.textContent = '⚠ Firebase error · ' + code;
   document.getElementById('eventList').innerHTML =
     '<div class="error-block">' +
