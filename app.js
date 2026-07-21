@@ -3558,79 +3558,117 @@
   // NOMADE MENU V1 — SAFE ONE-TIME SEED
   // Source of truth: nomade-menu-seed-v1.json (16 regular categories via the
   // custom-category subsystem + 19 bottled wines via the wines subsystem).
-  // Marker: /meta/nomadeMenuSeedVersion — seeds at most once, never overwrites
-  // an existing non-empty menu, and writes everything in one atomic update.
+  // Marker: /meta/nomadeMenuSeedVersion.
+  //
+  // Race safety: a plain once('value') read-then-write (even double-checked)
+  // is NOT sufficient here — two devices opening the app for the first time
+  // at the same moment could both observe an empty marker/menu and both
+  // proceed to write, duplicating every wine (fresh push() keys each time).
+  // Instead this mirrors the codebase's own established pattern for exactly
+  // this class of problem (see runStoplistZeroBasedMigrationIfNeeded): the
+  // marker is claimed with a Firebase transaction, which guarantees that
+  // even under concurrent first loads, only one caller ever receives
+  // committed === true and proceeds to write the menu content.
+  //
+  // If anything fails after the marker is claimed (a genuine pre-existing
+  // conflict, or a network failure during the content write), the marker
+  // claim is rolled back (removed) so neither a "marker without menu" nor a
+  // "menu without marker" state can persist, and a later attempt can retry.
   // =============================================
   function seedNomadeMenuIfEmpty() {
-    db.ref('meta/nomadeMenuSeedVersion').once('value', markerSnap => {
-      if (markerSnap.val()) {
-        console.log('[NomadeSeed] marker already set — skipping seed.');
-        return;
-      }
-      fetch('nomade-menu-seed-v1.json')
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-        .then(seedData => {
-          Promise.all([
-            db.ref('menuCategories').once('value'),
-            db.ref('menuSections').once('value'),
-            db.ref('wines').once('value'),
-            db.ref('meta/nomadeMenuSeedVersion').once('value'),
-          ]).then(([catsSnap, sectionsSnap, winesSnap, markerSnap2]) => {
-            if (markerSnap2.val()) {
-              console.log('[NomadeSeed] marker set by another device meanwhile — skipping.');
+    const markerRef = db.ref('meta/nomadeMenuSeedVersion');
+
+    fetch('nomade-menu-seed-v1.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(seedData => {
+        const claimedVersion = seedData.version || 1;
+
+        markerRef.transaction(
+          current => {
+            if (current) return; // already seeded — abort transaction (no write)
+            return claimedVersion; // claim atomically
+          },
+          (error, committed) => {
+            if (error) {
+              console.error('[NomadeSeed] marker transaction error:', error);
               return;
             }
-            const existingCats = catsSnap.val() || {};
-            const existingSections = sectionsSnap.val() || {};
-            const existingWines = winesSnap.val() || {};
-            const targetCatKeys = Object.keys(seedData.categories || {});
-            const hasCatConflict = targetCatKeys.some(k => existingCats[k]);
-            const hasSectionConflict = targetCatKeys.some(k =>
-              existingSections[k] && existingSections[k].items && Object.keys(existingSections[k].items).length > 0);
-            const hasWineConflict = Object.keys(existingWines).length > 0;
-            if (hasCatConflict || hasSectionConflict || hasWineConflict) {
-              console.warn('[NomadeSeed] Non-empty menu detected at target paths — aborting to avoid overwrite.');
+            if (!committed) {
+              console.log('[NomadeSeed] marker already set (this or another device) — skipping seed.');
               return;
             }
 
-            const now = Date.now();
-            const updates = {};
-            let categoryCount = 0, itemCount = 0, wineCount = 0;
+            // We now hold the exclusive right to seed. Re-verify the target
+            // paths are actually empty before writing menu content — if a
+            // genuine conflict is found (content existed without a marker),
+            // roll the marker claim back and write nothing else.
+            Promise.all([
+              db.ref('menuCategories').once('value'),
+              db.ref('menuSections').once('value'),
+              db.ref('wines').once('value'),
+            ]).then(([catsSnap, sectionsSnap, winesSnap]) => {
+              const existingCats = catsSnap.val() || {};
+              const existingSections = sectionsSnap.val() || {};
+              const existingWines = winesSnap.val() || {};
+              const targetCatKeys = Object.keys(seedData.categories || {});
+              const hasCatConflict = targetCatKeys.some(k => existingCats[k]);
+              const hasSectionConflict = targetCatKeys.some(k =>
+                existingSections[k] && existingSections[k].items && Object.keys(existingSections[k].items).length > 0);
+              const hasWineConflict = Object.keys(existingWines).length > 0;
 
-            Object.entries(seedData.categories || {}).forEach(([catKey, cat]) => {
-              updates['menuCategories/' + catKey] = {
-                nameRu: cat.nameRu, nameEn: cat.nameEn,
-                isActive: true, isCustom: true,
-                sortOrder: cat.sortOrder, createdAt: now, updatedAt: now,
-              };
-              categoryCount++;
-              Object.entries(cat.items || {}).forEach(([itemId, item]) => {
-                updates['menuSections/' + catKey + '/items/' + itemId] =
-                  Object.assign({}, item, { createdAt: now, updatedAt: now });
-                itemCount++;
+              if (hasCatConflict || hasSectionConflict || hasWineConflict) {
+                markerRef.remove().catch(() => {});
+                console.warn('[NomadeSeed] Non-empty menu detected after claiming marker — rolled back marker, aborting without writing menu content.');
+                return;
+              }
+
+              const now = Date.now();
+              const updates = {};
+              let categoryCount = 0, itemCount = 0, wineCount = 0;
+
+              Object.entries(seedData.categories || {}).forEach(([catKey, cat]) => {
+                updates['menuCategories/' + catKey] = {
+                  nameRu: cat.nameRu, nameEn: cat.nameEn,
+                  isActive: true, isCustom: true,
+                  sortOrder: cat.sortOrder, createdAt: now, updatedAt: now,
+                };
+                categoryCount++;
+                Object.entries(cat.items || {}).forEach(([itemId, item]) => {
+                  updates['menuSections/' + catKey + '/items/' + itemId] =
+                    Object.assign({}, item, { createdAt: now, updatedAt: now });
+                  itemCount++;
+                });
               });
-            });
 
-            (seedData.wines || []).forEach(wine => {
-              const wineRef = db.ref('wines').push();
-              updates['wines/' + wineRef.key] =
-                Object.assign({}, wine, { isActive: true, createdAt: now, updatedAt: now });
-              wineCount++;
-            });
-
-            updates['meta/nomadeMenuSeedVersion'] = seedData.version || 1;
-
-            db.ref().update(updates).then(() => {
-              writeAudit('MENU_SEEDED', {
-                version: seedData.version || 1,
-                categoryCount, itemCount, wineCount,
+              (seedData.wines || []).forEach(wine => {
+                const wineRef = db.ref('wines').push();
+                updates['wines/' + wineRef.key] =
+                  Object.assign({}, wine, { isActive: true, createdAt: now, updatedAt: now });
+                wineCount++;
               });
-              console.log('[NomadeSeed] Seed complete:', categoryCount, 'categories,', itemCount, 'items,', wineCount, 'wines.');
-            }).catch(e => console.error('[NomadeSeed] atomic write failed:', e));
-          });
-        })
-        .catch(e => console.error('[NomadeSeed] fetch/parse of nomade-menu-seed-v1.json failed:', e));
-    });
+
+              // Re-affirm the marker inside the same atomic multi-path update
+              // as the menu content: the transaction above is only the
+              // concurrency lock, this write is the authoritative atomic
+              // data commit, so a reader never observes marker and content
+              // out of sync.
+              updates['meta/nomadeMenuSeedVersion'] = claimedVersion;
+
+              db.ref().update(updates).then(() => {
+                writeAudit('MENU_SEEDED', { version: claimedVersion, categoryCount, itemCount, wineCount });
+                console.log('[NomadeSeed] Seed complete:', categoryCount, 'categories,', itemCount, 'items,', wineCount, 'wines.');
+              }).catch(e => {
+                markerRef.remove().catch(() => {});
+                console.error('[NomadeSeed] atomic content write failed — marker rolled back:', e);
+              });
+            }).catch(e => {
+              markerRef.remove().catch(() => {});
+              console.error('[NomadeSeed] pre-write emptiness check failed — marker rolled back:', e);
+            });
+          }
+        );
+      })
+      .catch(e => console.error('[NomadeSeed] fetch/parse of nomade-menu-seed-v1.json failed:', e));
   }
 
   // =============================================
