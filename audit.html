@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nomade — Audit Log</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = { databaseURL: "https://nomademadeira-waiter-default-rtdb.europe-west1.firebasedatabase.app/" };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0e1a17; color: #e8f4f2; font-family: 'DM Mono', monospace, 'Courier New', monospace; font-size: 12px; min-height: 100vh; }
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=DM+Mono:wght@400;500&display=swap');
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; background: #162320;
+  border-bottom: 1px solid rgba(42,157,143,0.25); flex-shrink: 0;
+  gap: 12px; flex-wrap: wrap;
+}
+.topbar-logo {
+  font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600;
+  color: #3dbfaf; letter-spacing: 2px; white-space: nowrap; flex-shrink: 0;
+}
+.topbar-logo span { color: #e9c46a; }
+.topbar-sub { font-size: 10px; color: #7ab3ac; letter-spacing: 1.5px; text-transform: uppercase; }
+
+.controls {
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px;
+  background: #111e1c; border-bottom: 1px solid rgba(42,157,143,0.15);
+}
+.controls input {
+  background: #1e302d; border: 1px solid rgba(42,157,143,0.25); border-radius: 4px;
+  color: #e8f4f2; font-family: inherit; font-size: 11px; padding: 5px 9px;
+  outline: none; min-width: 120px; flex: 1;
+}
+.controls input:focus { border-color: #2a9d8f; }
+.controls input::placeholder { color: rgba(122,179,172,0.4); }
+.btn-clear-filters {
+  background: #253b37; border: 1px solid rgba(42,157,143,0.25); border-radius: 4px;
+  color: #7ab3ac; font-family: inherit; font-size: 11px; padding: 5px 12px;
+  cursor: pointer; letter-spacing: 0.5px; flex-shrink: 0;
+}
+.btn-clear-filters:hover { border-color: #2a9d8f; color: #3dbfaf; }
+.btn-test-write {
+  background: #1a2e2b; border: 1px solid rgba(42,157,143,0.3); border-radius: 4px;
+  color: #7ab3ac; font-family: inherit; font-size: 11px; padding: 5px 12px;
+  cursor: pointer; letter-spacing: 0.5px; flex-shrink: 0;
+}
+.btn-test-write:hover { border-color: #2a9d8f; color: #3dbfaf; }
+.btn-test-write:disabled { opacity: 0.5; cursor: default; }
+
+.event-list { padding: 6px 8px; }
+.empty-state {
+  text-align: center; padding: 60px 20px; color: #7ab3ac;
+  font-size: 11px; letter-spacing: 1px;
+}
+
+.error-block {
+  background: rgba(231,111,81,0.08); border: 1px solid rgba(231,111,81,0.35);
+  border-radius: 6px; margin: 20px 12px; padding: 16px 18px;
+}
+.error-title  { color: #e76f51; font-size: 13px; font-weight: 500; margin-bottom: 10px; letter-spacing: 0.5px; }
+.error-detail { color: #c0d8d4; font-size: 11px; margin-bottom: 4px; }
+.error-hint   { color: #e9c46a; font-size: 10px; margin-top: 10px; letter-spacing: 0.3px; line-height: 1.5; }
+
+.event-row {
+  border: 1px solid rgba(42,157,143,0.12); border-radius: 5px;
+  margin-bottom: 4px; cursor: pointer; overflow: hidden;
+  transition: border-color 0.15s;
+}
+.event-row:hover { border-color: rgba(42,157,143,0.35); }
+.event-main {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  padding: 6px 10px; background: #162320;
+}
+.event-time  { font-size: 10px; color: #7ab3ac; flex-shrink: 0; white-space: nowrap; }
+.event-device { font-size: 11px; color: #e9c46a; font-weight: 500; flex-shrink: 0; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.event-id    { font-size: 9px; color: rgba(122,179,172,0.55); flex-shrink: 0; white-space: nowrap; }
+.event-table { background: rgba(42,157,143,0.15); color: #3dbfaf; font-size: 9px; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; letter-spacing: 0.5px; }
+.event-summary { font-size: 11px; color: #c0d8d4; flex: 1; min-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.event-action {
+  font-size: 9px; letter-spacing: 0.8px; padding: 2px 6px; border-radius: 3px;
+  flex-shrink: 0; text-transform: uppercase; font-weight: 500;
+}
+.action-order_add         { background: rgba(61,191,175,0.15); color: #3dbfaf; border: 1px solid rgba(61,191,175,0.3); }
+.action-order_qty_change  { background: rgba(61,191,175,0.08); color: #7ab3ac; border: 1px solid rgba(61,191,175,0.2); }
+.action-order_clear       { background: rgba(231,111,81,0.12); color: #e76f51; border: 1px solid rgba(231,111,81,0.3); }
+.action-table_checkout    { background: rgba(233,196,106,0.20); color: #e9c46a; border: 1px solid rgba(233,196,106,0.45); }
+.action-send_to_keeper    { background: rgba(233,196,106,0.15); color: #e9c46a; border: 1px solid rgba(233,196,106,0.3); }
+.action-app_open          { background: rgba(42,157,143,0.12); color: #2a9d8f; border: 1px solid rgba(42,157,143,0.25); }
+.action-device_created    { background: rgba(138,43,226,0.12); color: #c084fc; border: 1px solid rgba(138,43,226,0.25); }
+.action-device_named      { background: rgba(138,43,226,0.10); color: #b06be0; border: 1px solid rgba(138,43,226,0.2); }
+.action-device_rename     { background: rgba(138,43,226,0.08); color: #9b59c0; border: 1px solid rgba(138,43,226,0.2); }
+.action-menu_item_create  { background: rgba(61,191,175,0.12); color: #3dbfaf; border: 1px solid rgba(61,191,175,0.25); }
+.action-menu_item_update  { background: rgba(42,157,143,0.10); color: #7ab3ac; border: 1px solid rgba(42,157,143,0.2); }
+.action-menu_item_disable { background: rgba(231,111,81,0.10); color: #e76f51; border: 1px solid rgba(231,111,81,0.25); }
+.action-menu_item_reactivate      { background: rgba(61,191,175,0.12); color: #3dbfaf; border: 1px solid rgba(61,191,175,0.25); }
+.action-menu_item_variants_update { background: rgba(42,157,143,0.10); color: #7ab3ac; border: 1px solid rgba(42,157,143,0.2); }
+.action-wine_create       { background: rgba(233,196,106,0.10); color: #d4a838; border: 1px solid rgba(233,196,106,0.25); }
+.action-wine_update       { background: rgba(233,196,106,0.08); color: #b8963c; border: 1px solid rgba(233,196,106,0.18); }
+.action-wine_disable      { background: rgba(231,111,81,0.10); color: #e76f51; border: 1px solid rgba(231,111,81,0.22); }
+.action-wine_reactivate   { background: rgba(233,196,106,0.10); color: #d4a838; border: 1px solid rgba(233,196,106,0.25); }
+.action-stoplist_change   { background: rgba(180,30,30,0.12); color: #ff8080; border: 1px solid rgba(180,30,30,0.3); }
+.action-stoplist_clear    { background: rgba(180,30,30,0.18); color: #ff6060; border: 1px solid rgba(180,30,30,0.4); }
+.action-notes_update      { background: rgba(122,179,172,0.10); color: #7ab3ac; border: 1px solid rgba(122,179,172,0.2); }
+.action-audit_test        { background: rgba(42,157,143,0.10); color: #2a9d8f; border: 1px solid rgba(42,157,143,0.25); }
+
+.event-detail {
+  background: #0e1a17; border-top: 1px solid rgba(42,157,143,0.1);
+  padding: 8px 12px;
+}
+.event-detail pre {
+  font-size: 10px; color: #7ab3ac; white-space: pre-wrap; word-break: break-word;
+  line-height: 1.5;
+}
+
+.status-bar {
+  padding: 6px 12px; font-size: 10px; color: rgba(122,179,172,0.55);
+  letter-spacing: 0.5px; border-top: 1px solid rgba(42,157,143,0.12);
+  position: sticky; bottom: 0; background: #0e1a17;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-logo">the <span>TOP</span></div>
+    <div class="topbar-sub">Audit Log</div>
+  </div>
+  <div id="statusText" style="font-size:10px;color:#7ab3ac;letter-spacing:0.5px">Loading audit log...</div>
+</div>
+
+<div class="controls">
+  <input id="filterDevice"  placeholder="Filter: device name" />
+  <input id="filterAction"  placeholder="Filter: action" />
+  <input id="filterTable"   placeholder="Filter: table" />
+  <input id="filterSearch"  placeholder="Search all fields..." />
+  <button class="btn-clear-filters" onclick="clearFilters()">✕ Clear</button>
+  <button class="btn-test-write" id="testWriteBtn" onclick="writeTestEvent()">Write test event</button>
+  <div id="testWriteNotice" style="display:none;background:rgba(231,111,81,0.10);border:1px solid rgba(231,111,81,0.3);border-radius:4px;padding:6px 10px;font-size:10px;color:#e76f51;letter-spacing:0.3px;flex-basis:100%"></div>
+</div>
+
+<div class="event-list" id="eventList"></div>
+<div class="status-bar" id="statusBar"></div>
+
+<script>
+let allEvents = [];
+
+const ACTION_LABELS = {
+  app_open:                  { ru: 'Вход',                        en: 'App open' },
+  device_created:            { ru: 'Новое устройство',            en: 'New device' },
+  device_named:              { ru: 'Устройство названо',          en: 'Device named' },
+  device_rename:             { ru: 'Переименование устройства',   en: 'Device renamed' },
+  order_add:                 { ru: 'Добавлено',                   en: 'Item added' },
+  order_qty_change:          { ru: 'Изм. количество',             en: 'Qty changed' },
+  order_clear:               { ru: 'Расчёт / очистка',           en: 'Order cleared' },
+  table_checkout:            { ru: 'РАСЧЁТ',                      en: 'CHECKOUT' },
+  send_to_keeper:            { ru: 'Отправлено в KEEPER',         en: 'Sent to KEEPER' },
+  menu_item_create:          { ru: 'Пункт меню создан',           en: 'Menu item created' },
+  menu_item_update:          { ru: 'Пункт меню обновлён',         en: 'Menu item updated' },
+  menu_item_disable:         { ru: 'Пункт меню отключён',         en: 'Menu item disabled' },
+  menu_item_reactivate:      { ru: 'Пункт меню активирован',      en: 'Menu item reactivated' },
+  menu_item_variants_update: { ru: 'Варианты обновлены',          en: 'Variants updated' },
+  wine_create:               { ru: 'Вино добавлено',              en: 'Wine created' },
+  wine_update:               { ru: 'Вино обновлено',              en: 'Wine updated' },
+  wine_disable:              { ru: 'Вино отключено',              en: 'Wine disabled' },
+  wine_reactivate:           { ru: 'Вино активировано',           en: 'Wine reactivated' },
+  stoplist_change:           { ru: 'Стоп-лист изменён',           en: 'Stop list changed' },
+  stoplist_clear:            { ru: 'Стоп-лист очищен',            en: 'Stop list cleared' },
+  notes_update:              { ru: 'Заметки обновлены',           en: 'Notes updated' },
+  audit_test:                { ru: 'Тест записи',                  en: 'Test event' },
+};
+
+function getActionLabel(action) {
+  const labels = ACTION_LABELS[action];
+  return labels ? (labels.en || action) : action;
+}
+
+function formatTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'2-digit' }) +
+    ' ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+function getPayloadSummary(action, payload) {
+  if (!payload) return '';
+  try {
+    switch (action) {
+      case 'order_add':
+        return 'T' + payload.table + ': ' + (payload.itemName || '') + ' ×1';
+      case 'order_qty_change':
+        return 'T' + payload.table + ': ' + (payload.itemName || '') + ' ' +
+          (payload.delta > 0 ? '+' : '') + payload.delta +
+          ' (' + payload.beforeQty + '→' + payload.afterQty + ')';
+      case 'order_clear':
+        return 'Table ' + payload.table;
+      case 'table_checkout':
+        return 'T' + payload.table + ' · ' + payload.itemCount + ' item(s) · €' + Number(payload.total).toFixed(2);
+      case 'send_to_keeper':
+        return 'T' + payload.table + ' · ' +
+          (payload.linesSummary ? payload.linesSummary.length + ' item(s)' : '') +
+          (payload.total ? ' · €' + Number(payload.total).toFixed(2) : '');
+      case 'app_open':
+        return (payload.deviceName || '?') + ' · ' + (payload.existingDevice ? 'returning' : 'new device');
+      case 'device_created':
+        return (payload.deviceId || '').slice(0, 16) + '…';
+      case 'device_named':
+        return '→ "' + (payload.deviceName || '') + '"';
+      case 'device_rename':
+        return '"' + (payload.previousName || '') + '" → "' + (payload.newName || '') + '"';
+      case 'menu_item_create':
+      case 'menu_item_update':
+      case 'menu_item_disable':
+      case 'menu_item_reactivate':
+      case 'menu_item_variants_update':
+        return (payload.sectionKey || '') + ': ' + (payload.itemName || '');
+      case 'wine_create':
+      case 'wine_update':
+      case 'wine_disable':
+      case 'wine_reactivate':
+        return payload.wineName || '';
+      case 'stoplist_change':
+        return (payload.itemName || '') + ': ' + payload.before + ' → ' + payload.after;
+      case 'stoplist_clear':
+        return payload.beforeStoplist
+          ? Object.keys(payload.beforeStoplist).length + ' item(s) cleared'
+          : 'cleared';
+      case 'notes_update':
+        return 'Table ' + payload.table;
+      case 'audit_test':
+        return payload.source || 'audit.html';
+      default:
+        return JSON.stringify(payload).slice(0, 80);
+    }
+  } catch(e) { return ''; }
+}
+
+function escH(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function toggleDetail(key) {
+  const el = document.getElementById('detail-' + key);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function renderEvents() {
+  const fd = (document.getElementById('filterDevice').value  || '').toLowerCase();
+  const fa = (document.getElementById('filterAction').value  || '').toLowerCase();
+  const ft = (document.getElementById('filterTable').value   || '').toLowerCase();
+  const fs = (document.getElementById('filterSearch').value  || '').toLowerCase();
+
+  let filtered = allEvents;
+  if (fd) filtered = filtered.filter(e =>
+    (e.deviceName || '').toLowerCase().includes(fd) || (e.deviceId || '').toLowerCase().includes(fd));
+  if (fa) filtered = filtered.filter(e => (e.action || '').toLowerCase().includes(fa));
+  if (ft) filtered = filtered.filter(e => String(e.table || '').toLowerCase().includes(ft));
+  if (fs) filtered = filtered.filter(e => JSON.stringify(e).toLowerCase().includes(fs));
+
+  const shown = filtered.slice(0, 200);
+
+  if (!shown.length) {
+    document.getElementById('eventList').innerHTML =
+      '<div class="empty-state">No events yet · Событий пока нет</div>';
+    document.getElementById('statusBar').textContent =
+      'No events match filters · ' + allEvents.length + ' total';
+    return;
+  }
+
+  document.getElementById('eventList').innerHTML = shown.map(e => {
+    const summary  = escH(getPayloadSummary(e.action, e.payload));
+    const shortId  = escH((e.deviceId || '').slice(0, 12));
+    const safeKey  = escH(e._key);
+    const tableTag = e.table ? `<span class="event-table">T${escH(String(e.table))}</span>` : '';
+    const actionCls = 'action-' + (e.action || '').replace(/[^a-z_]/g, '');
+    return `<div class="event-row" onclick="toggleDetail('${safeKey}')">
+  <div class="event-main">
+    <span class="event-time">${escH(formatTime(e.createdAt))}</span>
+    <span class="event-device">${escH(e.deviceName || '?')}</span>
+    <span class="event-id">${shortId}</span>
+    <span class="event-action ${actionCls}">${escH(getActionLabel(e.action))}</span>
+    ${tableTag}
+    <span class="event-summary">${summary}</span>
+  </div>
+  <div class="event-detail" id="detail-${safeKey}" style="display:none">
+    <pre>${escH(JSON.stringify(e.payload, null, 2))}</pre>
+  </div>
+</div>`;
+  }).join('');
+
+  document.getElementById('statusBar').textContent =
+    'Showing ' + shown.length + ' of ' + filtered.length + ' filtered · ' +
+    allEvents.length + ' total events';
+}
+
+function clearFilters() {
+  ['filterDevice','filterAction','filterTable','filterSearch'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  renderEvents();
+}
+
+function writeTestEvent() {
+  const btn    = document.getElementById('testWriteBtn');
+  const notice = document.getElementById('testWriteNotice');
+  if (btn) { btn.disabled = true; btn.textContent = 'Writing...'; }
+  if (notice) notice.style.display = 'none';
+  db.ref('auditLog').push({
+    deviceId:   'audit_page',
+    deviceName: 'Audit page',
+    action:     'audit_test',
+    table:      null,
+    payload:    { source: 'audit.html', url: location.href },
+    createdAt:  Date.now(),
+  }).then(() => {
+    if (btn) { btn.disabled = false; btn.textContent = '✓ Test written'; }
+    setTimeout(() => { if (btn) btn.textContent = 'Write test event'; }, 3000);
+  }).catch(err => {
+    const code = err.code || 'UNKNOWN';
+    const msg  = err.message || String(err);
+    console.error('[audit.html] test write failed:', code, msg);
+    if (btn) { btn.disabled = false; btn.textContent = '✗ ' + code; }
+    if (notice) {
+      notice.textContent = code === 'PERMISSION_DENIED'
+        ? 'Firebase permission denied writing /auditLog — check database rules. ' + msg
+        : 'Write error · ' + code + ': ' + msg;
+      notice.style.display = 'block';
+    }
+  });
+}
+
+// Real-time Firebase listener — reads /auditLog, latest 500 events, shown newest first
+db.ref('auditLog').orderByChild('createdAt').limitToLast(500).on('value', snapshot => {
+  const data = snapshot.val() || {};
+  allEvents = Object.entries(data)
+    .map(([key, e]) => ({ ...e, _key: key }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const st = document.getElementById('statusText');
+  st.style.color = '#7ab3ac';
+  st.textContent = allEvents.length === 0
+    ? 'Connected · no events'
+    : allEvents.length + ' event' + (allEvents.length !== 1 ? 's' : '') + ' · live';
+  renderEvents();
+}, err => {
+  const code = err.code || 'UNKNOWN';
+  const msg  = err.message || String(err);
+  console.error('[audit.html] Firebase read error on /auditLog:', code, msg);
+  const st = document.getElementById('statusText');
+  st.style.color = '#e76f51';
+  st.textContent = '⚠ Firebase error · ' + code;
+  document.getElementById('eventList').innerHTML =
+    '<div class="error-block">' +
+    '<div class="error-title">⚠ Firebase read error — path: /auditLog</div>' +
+    '<div class="error-detail"><b>Code:</b> ' + escH(code) + '</div>' +
+    '<div class="error-detail"><b>Message:</b> ' + escH(msg) + '</div>' +
+    (code === 'PERMISSION_DENIED'
+      ? '<div class="error-hint">Firebase permission denied for /auditLog — check your database security rules. ' +
+        'Read access is required for this path.</div>'
+      : '') +
+    '</div>';
+  document.getElementById('statusBar').textContent =
+    'Firebase error · ' + code + ' · path: /auditLog';
+});
+
+// Filter inputs
+['filterDevice','filterAction','filterTable','filterSearch'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderEvents);
+});
+</script>
+</body>
+</html>
