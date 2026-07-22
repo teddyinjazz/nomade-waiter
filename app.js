@@ -347,12 +347,17 @@
             if (!idx[enComp]) idx[enComp] = { ru: ruComp, en: enComp };
           }
           if (item.variants) {
+            // Must match the prefix openEditableGroupPopup() actually used to build
+            // each variant's composite order-line name (item.orderPrefixRu/En override
+            // when present), or the index would key on a string that never occurs.
+            const groupPrefixRu = item.orderPrefixRu || ru;
+            const groupPrefixEn = item.orderPrefixEn || en;
             const vArr = Array.isArray(item.variants) ? item.variants : Object.values(item.variants);
             vArr.filter(v => v && (v.ru || v.name)).forEach(v => {
               const vRu = (v.ru || v.name || '').trim();
               const vEn = (v.en || v.name || '').trim();
-              const ruComp = buildVariantDisplayName(ru, vRu);
-              const enComp = buildVariantDisplayName(en, vEn);
+              const ruComp = buildVariantDisplayName(groupPrefixRu, vRu);
+              const enComp = buildVariantDisplayName(groupPrefixEn, vEn);
               if (ruComp && enComp) {
                 if (v.name && !idx[v.name]) idx[v.name] = { ru: ruComp, en: enComp };
                 if (!idx[ruComp]) idx[ruComp] = { ru: ruComp, en: enComp };
@@ -878,7 +883,7 @@
       if (isStopped && !badge) {
         const b = document.createElement('div');
         b.className = 'stop-badge';
-        b.style.cssText = 'font-size:9px;color:var(--nomade-red-bright);letter-spacing:1px;margin-top:1px';
+        b.style.cssText = 'font-size:9px;color:var(--nomade-red);letter-spacing:1px;margin-top:1px';
         b.textContent = lang === 'ru' ? 'СТОП' : 'STOP';
         btn.appendChild(b);
       } else if (!isStopped && badge) {
@@ -895,7 +900,7 @@
       if (isStopped && !badge) {
         const b = document.createElement('div');
         b.className = 'stop-badge';
-        b.style.cssText = 'font-size:9px;color:var(--nomade-red-bright);letter-spacing:1px;margin-top:1px';
+        b.style.cssText = 'font-size:9px;color:var(--nomade-red);letter-spacing:1px;margin-top:1px';
         b.textContent = lang === 'ru' ? 'СТОП' : 'STOP';
         btn.appendChild(b);
       } else if (!isStopped && badge) {
@@ -964,6 +969,59 @@
       variants: [
         { ru: 'Розе', en: 'Rosé', name: 'galipette_na_rose', price: 6.5 },
         { ru: 'Белый', en: 'White', name: 'galipette_na_white', price: 6.5 },
+      ]
+    },
+    // Nomade menu v2 popup groups (brunch/coffee/desserts) — registered here for the
+    // same reason as the v1 groups above: updateGroupBtn()/restoreGroupBtns() only
+    // total a parent card's item-count badge via this static map, not via the item's
+    // own embedded variants.
+    'nomade_plate': {
+      ru: 'Тарелка NÔMADE', en: 'NÔMADE Plate',
+      variants: [
+        { ru: 'Гравлакс из лосося домашнего посола', en: 'Home-Cured Gravlax Salmon', name: 'nomade_plate_gravlax_salmon', price: 12 },
+        { ru: 'Мортаделла', en: 'Mortadella', name: 'nomade_plate_mortadella', price: 12 },
+      ]
+    },
+    'toasted_brioche': {
+      ru: 'Бриошь', en: 'Toasted Brioche',
+      variants: [
+        { ru: 'Авокадо 🌿', en: 'Avocado 🌿', name: 'toasted_brioche_avocado', price: 12 },
+        { ru: 'Гравлакс из лосося', en: 'Gravlax Salmon', name: 'toasted_brioche_gravlax_salmon', price: 12 },
+        { ru: 'Обжаренные креветки', en: 'Sautéed Shrimps', name: 'toasted_brioche_shrimps', price: 12 },
+        { ru: 'Мортаделла', en: 'Mortadella', name: 'toasted_brioche_mortadella', price: 12 },
+      ]
+    },
+    'bowl': {
+      ru: 'Боул', en: 'Bowl',
+      variants: [
+        { ru: 'Гравлакс из лосося домашнего посола', en: 'Home-Cured Gravlax Salmon', name: 'bowl_gravlax_salmon', price: 12 },
+        { ru: 'Курица', en: 'Chicken', name: 'bowl_chicken', price: 12 },
+        { ru: 'Обжаренные креветки', en: 'Sautéed Shrimps', name: 'bowl_shrimps', price: 12 },
+      ]
+    },
+    'espresso_americano': {
+      // ru/en here is the popup-title fallback (matches the item's own nameRu/nameEn,
+      // "Espresso / Americano") — NOT the order-line prefix, which the item's own
+      // orderPrefixRu/orderPrefixEn ("Coffee") overrides in openEditableGroupPopup().
+      ru: 'Эспрессо / Американо', en: 'Espresso / Americano',
+      variants: [
+        { ru: 'Эспрессо', en: 'Espresso', name: 'coffee_espresso', price: 1.5 },
+        { ru: 'Американо', en: 'Americano', name: 'coffee_americano', price: 1.5 },
+      ]
+    },
+    'cheesecake_san_sebastian': {
+      ru: 'Чизкейк Сан-Себастьян 🌿', en: 'Cheesecake San Sebastián 🌿',
+      variants: [
+        { ru: 'Солёная карамель и фундук', en: 'Salted Caramel & Hazelnuts', name: 'cheesecake_salted_caramel_hazelnuts', price: 7 },
+        { ru: 'Ягодный гель и фисташки', en: 'Berry Gel & Pistachios', name: 'cheesecake_berry_gel_pistachios', price: 7 },
+      ]
+    },
+    'truffles': {
+      ru: 'Трюфели 🌿', en: 'Truffles 🌿',
+      variants: [
+        { ru: 'Тёмный шоколад и клюква', en: 'Dark Chocolate and Cranberry', name: 'truffle_dark_chocolate_cranberry', price: 2 },
+        { ru: 'Молочный шоколад и фундук', en: 'Milk Chocolate and Hazelnut', name: 'truffle_milk_chocolate_hazelnut', price: 2 },
+        { ru: 'Фисташковый', en: 'Pistachio', name: 'truffle_pistachio', price: 2 },
       ]
     },
     'Coral Light': {
@@ -1249,7 +1307,7 @@
         <span class="var-btn-name">${label}</span>
         <span style="display:flex;align-items:center;gap:6px">
           <span class="var-btn-price">€${v.price}</span>
-          ${isStopped ? `<span style="color:var(--nomade-red-bright);font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}
+          ${isStopped ? `<span style="color:var(--nomade-red);font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}
           ${qty > 0 ? `<span class="var-btn-count">${qty}</span>` : ''}
         </span>`;
       btn.onclick = () => {
@@ -1290,24 +1348,36 @@
       const opts = document.getElementById('varOptions');
       opts.innerHTML = '';
       const tableOrder = orders[currentTable] || {};
+      // grpDisp is the prefix used to build each variant's composite order-line name
+      // (buildVariantDisplayName). It normally matches the popup title (the item's own
+      // nameRu/nameEn), but an item may set orderPrefixRu/orderPrefixEn to use a
+      // shorter/different prefix on order lines than on its own popup card — e.g. the
+      // "Espresso / Americano" card produces order lines prefixed "Coffee" instead.
       const grpDisp = lang === 'ru'
-        ? (grp ? grp.ru : (item.nameRu || item.name || groupKey))
-        : (grp ? grp.en : (item.nameEn || item.name || groupKey));
+        ? (item.orderPrefixRu || (grp ? grp.ru : (item.nameRu || item.name || groupKey)))
+        : (item.orderPrefixEn || (grp ? grp.en : (item.nameEn || item.name || groupKey)));
       variantsArr.forEach(v => {
         const isStopped = currentTable !== '🛑' && isEffectivelyStopped(v.name);
         const qty = tableOrder[v.name] ? tableOrder[v.name].qty : 0;
         const label = lang === 'ru' ? v.ru : v.en;
         const fullDispName = buildVariantDisplayName(grpDisp, label);
+        // Optional per-variant description (e.g. Truffles flavours) — purely additive:
+        // variants without descRu/descEn render exactly as before (single-line, centered).
+        const vDesc = lang === 'ru' ? (v.descRu || '') : (v.descEn || '');
+        const nameBlock = vDesc
+          ? `<span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1;min-width:0"><span class="var-btn-name">${label}</span><span class="var-btn-desc">${escapeHtml(vDesc)}</span></span>`
+          : `<span class="var-btn-name">${label}</span>`;
         const varBtn = document.createElement('button');
         varBtn.className = 'var-btn' + (isStopped ? ' stopped' : '');
-        varBtn.innerHTML = `<span class="var-btn-name">${label}</span><span style="display:flex;align-items:center;gap:6px"><span class="var-btn-price">€${v.price}</span>${isStopped ? `<span style="color:var(--nomade-red-bright);font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}${qty > 0 ? `<span class="var-btn-count">${qty}</span>` : ''}</span>`;
+        if (vDesc) varBtn.style.alignItems = 'flex-start';
+        varBtn.innerHTML = `${nameBlock}<span class="var-btn-meta" style="display:flex;align-items:center;gap:6px;flex-shrink:0"><span class="var-btn-price">€${v.price}</span>${isStopped ? `<span style="color:var(--nomade-red);font-size:10px;letter-spacing:1px">${lang === 'ru' ? 'СТОП' : 'STOP'}</span>` : ''}${qty > 0 ? `<span class="var-btn-count">${qty}</span>` : ''}</span>`;
         varBtn.onclick = () => {
           addItemByVariant(v.name, v.price, fullDispName);
           const newQty = (orders[currentTable] && orders[currentTable][v.name]) ? orders[currentTable][v.name].qty : 0;
           const countEl = varBtn.querySelector('.var-btn-count');
           if (newQty > 0) {
             if (countEl) countEl.textContent = newQty;
-            else varBtn.querySelector('[style]').insertAdjacentHTML('afterbegin', `<span class="var-btn-count">${newQty}</span>`);
+            else varBtn.querySelector('.var-btn-meta').insertAdjacentHTML('afterbegin', `<span class="var-btn-count">${newQty}</span>`);
           }
           const tOrder = orders[currentTable] || {};
           const total = variantsArr.reduce((s, v2) => s + (tOrder[v2.name] ? tOrder[v2.name].qty : 0), 0);
@@ -1596,11 +1666,13 @@
       const btn = document.createElement('button');
       const enNames={Рис:'Rice',Овощи:'Vegetables',Спагетти:'Spaghetti',Салат:'Salad',Спаржа:'Asparagus',Пюре:'Mashed potato','Жареный картофель':'Roast potato','Картофель фри':'French fries'};
       if (stopped) {
-        btn.style.cssText = "background:var(--nomade-charcoal);border:1px solid rgba(var(--nomade-red-rgb),0.5);border-radius:5px;padding:12px 14px;color:var(--nomade-ivory);font-family:'DM Mono',monospace;font-size:13px;cursor:not-allowed;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;opacity:0.45;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
-        btn.innerHTML = `<span style="color:var(--nomade-muted);font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:var(--nomade-red-bright);font-size:9px;letter-spacing:1px">${lang==='ru'?'СТОП':'STOP'}</span>`;
+        btn.style.cssText = "background:var(--nomade-surface);border:1px solid rgba(var(--nomade-red-rgb),0.5);border-radius:5px;padding:12px 14px;color:var(--nomade-text);font-family:'DM Mono',monospace;font-size:13px;cursor:not-allowed;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;opacity:0.45;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
+        btn.innerHTML = `<span style="color:var(--nomade-muted);font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:var(--nomade-red);font-size:9px;letter-spacing:1px">${lang==='ru'?'СТОП':'STOP'}</span>`;
       } else {
-        btn.style.cssText = "background:var(--nomade-surface-raised);border:1px solid var(--nomade-green);border-radius:5px;padding:12px 14px;color:var(--nomade-ivory);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
-        btn.innerHTML = `<span style="color:var(--nomade-ivory);font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:${isFree?'var(--nomade-green-bright)':'var(--nomade-orange)'};font-size:13px;font-weight:bold">${displayPrice}</span>`;
+        btn.style.cssText = "background:var(--nomade-surface-raised);border:1px solid var(--nomade-olive);border-radius:5px;padding:12px 14px;color:var(--nomade-text);font-family:'DM Mono',monospace;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;width:100%;font-weight:500;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation";
+        // Small (13px) price/"included" label kept black: measured contrast for olive
+        // or orange text on white is ~3.3-3.75:1, below small-text AA — see Part P.
+        btn.innerHTML = `<span style="color:var(--nomade-text);font-size:14px">${lang==='ru'?side.name:enNames[side.name]||side.name}</span><span style="color:var(--nomade-text);font-size:13px;font-weight:bold">${displayPrice}</span>`;
         btn.onclick = () => selectSide(side.name, isFree ? 0 : side.price);
       }
       list.appendChild(btn);
@@ -1907,7 +1979,7 @@
           const sideLine = side.price * side.qty;
           total += sideLine; count += side.qty;
           const safeSide = sideKey.replace(/'/g, "\\'");
-          html += `<div class="order-pair"><div class="order-pair-main"><div class="oi-name">${displayName(main.displayName||mainKey, main)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',-1)">−</button><span class="oi-qty">${main.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',1)">+</button></div><div class="oi-price">€${mainLine.toFixed(2)}</div></div><div class="order-pair-side"><div class="oi-name">↳ ${displayName(side.displayName||sideKey, side)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',-1)">−</button><span class="oi-qty">${side.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',1)">+</button></div><div class="oi-price" style="color:${side.price===0?'var(--nomade-green-bright)':'var(--nomade-orange)'}">${side.price===0 ? (lang === 'ru' ? 'вкл.' : 'incl.') : '€' + sideLine.toFixed(2)}</div></div></div>`;
+          html += `<div class="order-pair"><div class="order-pair-main"><div class="oi-name">${displayName(main.displayName||mainKey, main)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',-1)">−</button><span class="oi-qty">${main.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',1)">+</button></div><div class="oi-price">€${mainLine.toFixed(2)}</div></div><div class="order-pair-side"><div class="oi-name">↳ ${displayName(side.displayName||sideKey, side)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',-1)">−</button><span class="oi-qty">${side.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeSide}',1)">+</button></div><div class="oi-price">${side.price===0 ? (lang === 'ru' ? 'вкл.' : 'incl.') : '€' + sideLine.toFixed(2)}</div></div></div>`;
         } else {
           html += `<div class="order-item"><div class="oi-name">${displayName(main.displayName||mainKey, main)}</div><div class="oi-controls"><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',-1)">−</button><span class="oi-qty">${main.qty}</span><button class="oi-ctrl-btn" onclick="changeQty('${safeMain}',1)">+</button></div><div class="oi-price">€${mainLine.toFixed(2)}</div></div>`;
         }
@@ -1945,7 +2017,7 @@
         btn.style.outline = '2px solid var(--nomade-red)';
         btn.title = '⚠️ Notes' + (count > 0 ? ' + ' + count + (lang === 'ru' ? ' позиций' : ' items') : '');
       } else if (count > 0) {
-        btn.style.outline = '2px solid var(--nomade-green-bright)';
+        btn.style.outline = '2px solid var(--nomade-olive-bright)';
         btn.title = count + (lang === 'ru' ? ' позиций' : ' items');
       } else {
         btn.style.outline = '';
@@ -2037,7 +2109,7 @@
             hasNew = true;
             const line = item.price * newQty;
             total += line;
-            lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||mainKey, item)} &nbsp; <span style="color:var(--nomade-orange)">€${line.toFixed(2)}</span></div>`;
+            lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||mainKey, item)} &nbsp; <span style="color:var(--nomade-text)">€${line.toFixed(2)}</span></div>`;
           }
         }
         if (sideKey && tableOrder[sideKey]) {
@@ -2047,7 +2119,7 @@
             hasNew = true;
             const line = item.price * newQty;
             total += line;
-            lines += `<div style="padding-left:12px;color:var(--nomade-muted)">↳ × ${newQty} &nbsp; ${displayName(item.displayName||sideKey, item)} &nbsp; <span style="color:${item.price===0?'var(--nomade-green-bright)':'var(--nomade-orange)'}">${item.price===0?(lang==='ru'?'вкл.':'incl.'):'€'+line.toFixed(2)}</span></div>`;
+            lines += `<div style="padding-left:12px;color:var(--nomade-muted)">↳ × ${newQty} &nbsp; ${displayName(item.displayName||sideKey, item)} &nbsp; <span style="color:var(--nomade-text)">${item.price===0?(lang==='ru'?'вкл.':'incl.'):'€'+line.toFixed(2)}</span></div>`;
           }
         }
       } else {
@@ -2058,7 +2130,7 @@
           hasNew = true;
           const line = item.price * newQty;
           total += line;
-          lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||name, item)} &nbsp; <span style="color:var(--nomade-orange)">€${line.toFixed(2)}</span></div>`;
+          lines += `<div>× ${newQty} &nbsp; ${displayName(item.displayName||name, item)} &nbsp; <span style="color:var(--nomade-text)">€${line.toFixed(2)}</span></div>`;
         }
       }
     });
@@ -2074,7 +2146,7 @@
     document.getElementById('sentTable').textContent = (lang==='ru'?'СТОЛ ':'TABLE ') + currentTable;
     const noteText = (notes[currentTable] || '').trim();
     if (noteText) {
-      lines += `<div style="margin-top:8px;color:var(--nomade-red-bright);border-top:1px solid rgba(var(--nomade-red-rgb),0.4);padding-top:6px">⚠️ NOTES:<br>${escapeHtml(noteText)}</div>`;
+      lines += `<div style="margin-top:8px;color:var(--nomade-red);border-top:1px solid rgba(var(--nomade-red-rgb),0.4);padding-top:6px">⚠️ NOTES:<br>${escapeHtml(noteText)}</div>`;
     }
     document.getElementById('sentItemsList').innerHTML = lines;
     document.getElementById('sentTotal').textContent = (lang === 'ru' ? 'К переносу: €' : 'To KEEPER: €') + total.toFixed(2);
@@ -2796,6 +2868,12 @@
           const baseName = lang === 'ru' ? (cat.nameRu || cat.nameEn || key) : (cat.nameEn || cat.nameRu || key);
           nameEl.textContent = key === 'usyk_fight_night' ? '🥊 ' + baseName : baseName;
         }
+        const descEl = section.querySelector('.acc-desc');
+        if (descEl) {
+          const desc = lang === 'ru' ? (cat.descRu || '') : (cat.descEn || '');
+          descEl.textContent = desc;
+          descEl.style.display = desc ? '' : 'none';
+        }
       }
       renderCustomCategoryItems(key);
     });
@@ -2808,10 +2886,15 @@
     section.id = 'customCat_' + key;
     const baseName = lang === 'ru' ? (cat.nameRu || cat.nameEn || key) : (cat.nameEn || cat.nameRu || key);
     const dispName = isEvent ? '🥊 ' + baseName : baseName;
+    // Optional category description (e.g. "specialty coffee from local roasters...") —
+    // purely additive: categories without descRu/descEn render an empty, hidden div
+    // with no visual change from before this field existed.
+    const desc = lang === 'ru' ? (cat.descRu || '') : (cat.descEn || '');
     section.innerHTML =
       `<div class="acc-header" id="${escapeHtml(key)}AccHeader">` +
       `<span class="acc-title">${escapeHtml(dispName)}</span>` +
       `<span class="acc-arrow">▼</span></div>` +
+      `<div class="acc-desc" style="${desc ? '' : 'display:none'}">${escapeHtml(desc)}</div>` +
       `<div class="acc-body" id="${escapeHtml(key)}AccBody">` +
       `<div class="items-grid" id="${escapeHtml(key)}List"></div></div>`;
     const header = section.querySelector('.acc-header');
@@ -3672,6 +3755,164 @@
   }
 
   // =============================================
+  // NOMADE MENU V2 — ADDITIVE MIGRATION (brunch, coffee, matcha, desserts)
+  // Source of truth: nomade-menu-migration-v2.json.
+  // Reuses the SAME version marker as v1 (/meta/nomadeMenuSeedVersion), advanced
+  // atomically 1 -> 2 via transaction — no second, competing version marker.
+  //
+  // This is an ADDITIVE migration onto an already-populated v1 production menu:
+  // it must never remove, rename or overwrite anything, only add new categories,
+  // items, variants and wines, plus (safely, without changing IDs) shift the
+  // existing 16 categories' sortOrder forward so the 7 new ones render first.
+  //
+  // Race safety mirrors seedNomadeMenuIfEmpty()/runStoplistZeroBasedMigrationIfNeeded:
+  // the marker transaction only commits for a caller that observes the marker at
+  // exactly fromVersion (1); any other value (already 2+, or not yet seeded) aborts
+  // the transaction with no write. If anything fails after the marker is claimed
+  // (an unexpected v1-state mismatch, a genuine key conflict, or a network failure
+  // on the content write), the marker is restored to fromVersion — NOT removed,
+  // since removing it would make seedNomadeMenuIfEmpty() wrongly treat a live,
+  // already-seeded production database as empty and eligible for a full v1 reseed.
+  // =============================================
+  function applyNomadeMenuMigrationV2() {
+    const markerRef = db.ref('meta/nomadeMenuSeedVersion');
+
+    fetch('nomade-menu-migration-v2.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(migrationData => {
+        const fromVersion = migrationData.fromVersion || 1;
+        const toVersion = migrationData.toVersion || 2;
+
+        markerRef.transaction(
+          current => {
+            if (current !== fromVersion) return; // not exactly v1 — abort (already migrated, or v1 not seeded yet)
+            return toVersion; // claim atomically: advance fromVersion -> toVersion
+          },
+          (error, committed) => {
+            if (error) {
+              console.error('[NomadeMigrationV2] marker transaction error:', error);
+              return;
+            }
+            if (!committed) {
+              console.log('[NomadeMigrationV2] version marker is not exactly ' + fromVersion + ' — skipping (already migrated, or v1 not yet present).');
+              return;
+            }
+
+            // We now hold the exclusive right to migrate. Re-verify the expected
+            // v1 menu is actually present, and that none of our new keys already
+            // exist with different data, before writing anything else.
+            Promise.all([
+              db.ref('menuCategories').once('value'),
+              db.ref('menuSections').once('value'),
+              db.ref('wines').once('value'),
+            ]).then(([catsSnap, sectionsSnap, winesSnap]) => {
+              const existingCats = catsSnap.val() || {};
+              const existingSections = sectionsSnap.val() || {};
+              const existingWines = winesSnap.val() || {};
+
+              const expectedV1Cats = migrationData.existingCategoryOrder || [];
+              const missingV1Cats = expectedV1Cats.filter(k => !existingCats[k]);
+
+              const newCatKeys = Object.keys(migrationData.newCategories || {});
+              const catConflicts = newCatKeys.filter(k => existingCats[k]);
+              const sectionConflicts = [];
+              newCatKeys.forEach(catKey => {
+                const existingItems = (existingSections[catKey] && existingSections[catKey].items) || {};
+                if (Object.keys(existingItems).length > 0) sectionConflicts.push(catKey);
+              });
+              Object.entries(migrationData.newItemsForExistingCategories || {}).forEach(([catKey, items]) => {
+                const existingItems = (existingSections[catKey] && existingSections[catKey].items) || {};
+                Object.keys(items).forEach(itemId => {
+                  if (existingItems[itemId]) sectionConflicts.push(catKey + '/' + itemId);
+                });
+              });
+              const existingWineNames = Object.values(existingWines).map(w => w.name);
+              const wineConflicts = (migrationData.newWines || []).filter(w => existingWineNames.includes(w.name));
+
+              if (missingV1Cats.length > 0 || catConflicts.length > 0 || sectionConflicts.length > 0 || wineConflicts.length > 0) {
+                markerRef.set(fromVersion).catch(() => {});
+                console.error('[NomadeMigrationV2] Pre-migration verification failed — rolled marker back to ' + fromVersion + ', aborting without writing menu content.', {
+                  missingV1Cats, catConflicts, sectionConflicts, wineConflicts: wineConflicts.map(w => w.name),
+                });
+                return;
+              }
+
+              const now = Date.now();
+              const updates = {};
+              let categoryCountAdded = 0, topLevelItemCountAdded = 0, variantCountAdded = 0, wineCountAdded = 0;
+
+              // Shift the existing 16 categories' sortOrder forward (same IDs, same
+              // nameRu/nameEn/isActive/createdAt — only sortOrder+updatedAt change)
+              // so the 7 new categories render first while preserving relative order.
+              const shift = newCatKeys.length * 10;
+              expectedV1Cats.forEach((catKey, idx) => {
+                updates['menuCategories/' + catKey + '/sortOrder'] = shift + (idx + 1) * 10;
+                updates['menuCategories/' + catKey + '/updatedAt'] = now;
+              });
+
+              Object.entries(migrationData.newCategories || {}).forEach(([catKey, cat]) => {
+                updates['menuCategories/' + catKey] = {
+                  nameRu: cat.nameRu, nameEn: cat.nameEn,
+                  descRu: cat.descRu || '', descEn: cat.descEn || '',
+                  isActive: true, isCustom: true,
+                  sortOrder: cat.sortOrder, createdAt: now, updatedAt: now,
+                };
+                categoryCountAdded++;
+                Object.entries(cat.items || {}).forEach(([itemId, item]) => {
+                  updates['menuSections/' + catKey + '/items/' + itemId] =
+                    Object.assign({}, item, { createdAt: now, updatedAt: now });
+                  topLevelItemCountAdded++;
+                  if (item.variants) variantCountAdded += item.variants.length;
+                });
+              });
+
+              Object.entries(migrationData.newItemsForExistingCategories || {}).forEach(([catKey, items]) => {
+                Object.entries(items).forEach(([itemId, item]) => {
+                  updates['menuSections/' + catKey + '/items/' + itemId] =
+                    Object.assign({}, item, { createdAt: now, updatedAt: now });
+                  topLevelItemCountAdded++;
+                  if (item.variants) variantCountAdded += item.variants.length;
+                });
+              });
+
+              (migrationData.newWines || []).forEach(wine => {
+                const wineRef = db.ref('wines').push();
+                updates['wines/' + wineRef.key] =
+                  Object.assign({}, wine, { isActive: true, createdAt: now, updatedAt: now });
+                wineCountAdded++;
+              });
+
+              // Re-affirm the version marker plus an explicit, human-auditable
+              // completion record, inside the SAME atomic multi-path update as the
+              // added content — a reader never observes version=2 (or a "completed"
+              // record) without the corresponding menu content actually being there.
+              updates['meta/nomadeMenuSeedVersion'] = toVersion;
+              updates['meta/migrations/nomadeMenuV2/fromVersion'] = fromVersion;
+              updates['meta/migrations/nomadeMenuV2/toVersion'] = toVersion;
+              updates['meta/migrations/nomadeMenuV2/completedAt'] = now;
+
+              db.ref().update(updates).then(() => {
+                writeAudit('MENU_MIGRATED', {
+                  fromVersion, toVersion,
+                  categoryCountAdded, topLevelItemCountAdded, variantCountAdded, wineCountAdded,
+                });
+                console.log('[NomadeMigrationV2] Migration complete:', categoryCountAdded, 'categories,',
+                  topLevelItemCountAdded, 'items,', variantCountAdded, 'variants,', wineCountAdded, 'wines added.');
+              }).catch(e => {
+                markerRef.set(fromVersion).catch(() => {});
+                console.error('[NomadeMigrationV2] atomic content write failed — version marker rolled back to ' + fromVersion + ':', e);
+              });
+            }).catch(e => {
+              markerRef.set(fromVersion).catch(() => {});
+              console.error('[NomadeMigrationV2] pre-write verification failed — version marker rolled back to ' + fromVersion + ':', e);
+            });
+          }
+        );
+      })
+      .catch(e => console.error('[NomadeMigrationV2] fetch/parse of nomade-menu-migration-v2.json failed:', e));
+  }
+
+  // =============================================
   // ONE-TIME MIGRATION: stoplist 0-based semantics
   // Marker: /stoplistMeta/migrations/zeroBasedV1
   // Old: qty 1 = stop. New: qty 0 = stop.
@@ -3839,6 +4080,11 @@
     // Safe by construction: seeds only if /meta/nomadeMenuSeedVersion is unset and the
     // target category/wine paths are empty; never overwrites existing data.
     seedNomadeMenuIfEmpty();
+    // Nomade menu v2 — additive migration (brunch, coffee, matcha, desserts) onto an
+    // already-populated v1 production menu. Safe by construction: advances the SAME
+    // version marker 1 -> 2 only via transaction, only adds new records, never
+    // overwrites/renames/removes existing ones.
+    applyNomadeMenuMigrationV2();
 
     const logoArea = document.getElementById('appLogoArea');
     if (logoArea) {

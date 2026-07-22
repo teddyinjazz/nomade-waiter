@@ -1,0 +1,169 @@
+{
+  "fromVersion": 1,
+  "toVersion": 2,
+  "existingCategoryOrder": [
+    "signature_cocktails", "classic_cocktails", "mocktails", "craft_beer", "craft_cider",
+    "homemade_lemonades", "organic_soft_drinks", "nomade_kombucha", "nomade_water",
+    "wine_by_glass", "fine_with_wine", "first_things_first", "warm_starters",
+    "catch_and_carve", "leaf_and_crunch", "beyond_pasta"
+  ],
+  "newCategories": {
+    "brunch_eggs": {
+      "nameRu": "Завтраки — Яйца",
+      "nameEn": "Brunch — Eggs",
+      "sortOrder": 10,
+      "items": {
+        "french_omelette": { "name": "brunch_eggs_french_omelette", "nameRu": "Французский омлет с камамбером и трюфельным кремом 🌿", "nameEn": "French Omelette with Camembert & Truffle Cream 🌿", "price": 12, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "nomade_plate": {
+          "name": "brunch_eggs_nomade_plate", "nameRu": "Тарелка NÔMADE", "nameEn": "NÔMADE Plate",
+          "descRu": "яйца всмятку, авокадо, картофель конфи и маринованный лук",
+          "descEn": "soft-boiled eggs, avocado, potato confit, pickled onion",
+          "isGroup": true, "groupKey": "nomade_plate", "isActive": true, "sortOrder": 20,
+          "priceLabelRu": "€12", "priceLabelEn": "€12",
+          "variants": [
+            { "ru": "Гравлакс из лосося домашнего посола", "en": "Home-Cured Gravlax Salmon", "name": "nomade_plate_gravlax_salmon", "price": 12 },
+            { "ru": "Мортаделла", "en": "Mortadella", "name": "nomade_plate_mortadella", "price": 12 }
+          ]
+        },
+        "crepes_salmon": { "name": "brunch_eggs_crepes_salmon", "nameRu": "Блины с лососем, цитрусовым соусом и яйцом пашот", "nameEn": "Crêpes with Salmon, Citrus Sauce & Poached Egg", "price": 12, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "turkish_eggs": { "name": "brunch_eggs_turkish_eggs", "nameRu": "Яйца по-турецки с греческим йогуртом и нутом 🌿", "nameEn": "Turkish-Style Eggs with Greek Yogurt & Chickpeas 🌿", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "toasted_brioche": {
+          "name": "brunch_eggs_toasted_brioche", "nameRu": "Бриошь", "nameEn": "Toasted Brioche",
+          "descRu": "подаётся на поджаренной бриоши", "descEn": "served on toasted brioche",
+          "isGroup": true, "groupKey": "toasted_brioche", "isActive": true, "sortOrder": 50,
+          "priceLabelRu": "€12", "priceLabelEn": "€12",
+          "variants": [
+            { "ru": "Авокадо 🌿", "en": "Avocado 🌿", "name": "toasted_brioche_avocado", "price": 12, "descRu": "яйца пашот, крем с травами и зелёная сальса", "descEn": "poached eggs, herb cream & green salsa" },
+            { "ru": "Гравлакс из лосося", "en": "Gravlax Salmon", "name": "toasted_brioche_gravlax_salmon", "price": 12, "descRu": "яйца пашот и голландский соус", "descEn": "poached eggs & hollandaise" },
+            { "ru": "Обжаренные креветки", "en": "Sautéed Shrimps", "name": "toasted_brioche_shrimps", "price": 12, "descRu": "скрэмбл, красная сальса и голландский соус", "descEn": "scrambled eggs, red salsa & hollandaise" },
+            { "ru": "Мортаделла", "en": "Mortadella", "name": "toasted_brioche_mortadella", "price": 12, "descRu": "яйца пашот, трюфельный соус, пармезан и чёрная соль", "descEn": "poached eggs, truffle sauce, parmesan & black salt" }
+          ]
+        }
+      }
+    },
+    "brunch_savoury": {
+      "nameRu": "Завтраки — Несладкое",
+      "nameEn": "Brunch — Savoury",
+      "sortOrder": 20,
+      "items": {
+        "tomato_cream_soup": { "name": "brunch_savoury_tomato_soup", "nameRu": "Томатный крем-суп с тёплым сыром и тостами с песто 🌿", "nameEn": "Tomato Cream Soup with Warm Cheese & Pesto Toasts 🌿", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "savory_pie_of_day": { "name": "brunch_savoury_pie_of_day", "nameRu": "Несладкий пирог дня", "nameEn": "Savory Pie of the Day", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "bowl": {
+          "name": "brunch_savoury_bowl", "nameRu": "Боул", "nameEn": "Bowl",
+          "descRu": "рис, местное манго и авокадо", "descEn": "rice, local mango & avocado",
+          "isGroup": true, "groupKey": "bowl", "isActive": true, "sortOrder": 30,
+          "priceLabelRu": "€12", "priceLabelEn": "€12",
+          "variants": [
+            { "ru": "Гравлакс из лосося домашнего посола", "en": "Home-Cured Gravlax Salmon", "name": "bowl_gravlax_salmon", "price": 12 },
+            { "ru": "Курица", "en": "Chicken", "name": "bowl_chicken", "price": 12 },
+            { "ru": "Обжаренные креветки", "en": "Sautéed Shrimps", "name": "bowl_shrimps", "price": 12 }
+          ]
+        },
+        "seasonal_salad": { "name": "brunch_savoury_seasonal_salad", "nameRu": "Сезонный салат с заправкой из маракуйи 🌿🌿", "nameEn": "Seasonal Salad with Passion Fruit Dressing 🌿🌿", "price": 8, "isGroup": false, "isActive": true, "sortOrder": 40 }
+      }
+    },
+    "brunch_sweet": {
+      "nameRu": "Завтраки — Сладкое",
+      "nameEn": "Brunch — Sweet",
+      "sortOrder": 30,
+      "items": {
+        "coconut_rice_porridge": { "name": "brunch_sweet_coconut_rice_porridge", "nameRu": "Кокосовая рисовая каша с местными фруктами 🌿🌿", "nameEn": "Coconut Rice Porridge with Local Fruits 🌿🌿", "price": 10, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "banana_bread": { "name": "brunch_sweet_banana_bread", "nameRu": "Банановый хлеб с мягким сливочным маслом и домашней карамелью 🌿", "nameEn": "Banana Bread with Soft Butter & Homemade Caramel 🌿", "price": 8, "isGroup": false, "isActive": true, "sortOrder": 20 }
+      }
+    },
+    "brunch_cocktails": {
+      "nameRu": "Коктейли к завтраку",
+      "nameEn": "Brunch Cocktails",
+      "sortOrder": 40,
+      "items": {
+        "rossini": { "name": "brunch_cocktail_rossini", "nameRu": "Россини", "nameEn": "Rossini", "price": 8, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "pure_bellini": { "name": "brunch_cocktail_bellini", "nameRu": "Беллини", "nameEn": "Pure Bellini", "price": 8, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "mimosa": { "name": "brunch_cocktail_mimosa", "nameRu": "Мимоза", "nameEn": "Mimosa", "price": 8, "isGroup": false, "isActive": true, "sortOrder": 30 }
+      }
+    },
+    "nomade_coffee": {
+      "nameRu": "Кофе",
+      "nameEn": "Coffee",
+      "descRu": "спешелти-кофе от местных обжарщиков из Понта-ду-Паргу — Gato Legal",
+      "descEn": "specialty coffee from local roasters in Ponta do Pargo — Gato Legal",
+      "sortOrder": 50,
+      "items": {
+        "espresso_americano": {
+          "name": "coffee_espresso_americano", "nameRu": "Эспрессо / Американо", "nameEn": "Espresso / Americano",
+          "orderPrefixRu": "Кофе", "orderPrefixEn": "Coffee",
+          "isGroup": true, "groupKey": "espresso_americano", "isActive": true, "sortOrder": 10,
+          "priceLabelRu": "€1,50", "priceLabelEn": "€1.50",
+          "variants": [
+            { "ru": "Эспрессо", "en": "Espresso", "name": "coffee_espresso", "price": 1.5 },
+            { "ru": "Американо", "en": "Americano", "name": "coffee_americano", "price": 1.5 }
+          ]
+        },
+        "cappuccino": { "name": "coffee_cappuccino", "nameRu": "Капучино", "nameEn": "Cappuccino", "price": 3.5, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "flat_white": { "name": "coffee_flat_white", "nameRu": "Флэт уайт", "nameEn": "Flat White", "price": 4, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "latte": { "name": "coffee_latte", "nameRu": "Латте", "nameEn": "Latte", "price": 4, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "cocoa_drink": { "name": "coffee_cocoa_drink", "nameRu": "Какао", "nameEn": "Cocoa Drink", "price": 4, "isGroup": false, "isActive": true, "sortOrder": 50 },
+        "milk_or_syrup_addon": { "name": "coffee_milk_or_syrup_addon", "nameRu": "Растительное молоко или сироп", "nameEn": "Plant Milk or Syrup Add-on", "price": 1, "isGroup": false, "isActive": true, "sortOrder": 60 }
+      }
+    },
+    "nomade_matcha": {
+      "nameRu": "Матча",
+      "nameEn": "Matcha",
+      "descRu": "органическая матча церемониального качества из Удзи, Киото, Япония",
+      "descEn": "ceremonial grade organic matcha powder from Uji, Kyoto, Japan",
+      "sortOrder": 60,
+      "items": {
+        "matcha_latte_plant_milk": { "name": "matcha_latte_plant_milk", "nameRu": "Матча-латте на растительном молоке", "nameEn": "Matcha Latte with Plant Milk", "price": 6, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "ceremonial_matcha_tea": { "name": "matcha_ceremonial_tea", "nameRu": "Церемониальная матча", "nameEn": "Ceremonial Matcha Tea", "price": 8, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "pink_dragon_fruit_latte": { "name": "matcha_pink_dragon_fruit_latte", "nameRu": "Латте с розовой питахайей", "nameEn": "Pink Dragon Fruit Latte", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "blueberry_butterfly_pea_latte": { "name": "matcha_blueberry_butterfly_pea_latte", "nameRu": "Латте с черникой и анчаном", "nameEn": "Blueberry Butterfly Pea Latte", "price": 5, "isGroup": false, "isActive": true, "sortOrder": 40 }
+      }
+    },
+    "nomade_desserts": {
+      "nameRu": "Десерты",
+      "nameEn": "Desserts",
+      "descRu": "все десерты доступны навынос",
+      "descEn": "all desserts are available for takeaway",
+      "sortOrder": 70,
+      "items": {
+        "tart_raspberry_richesse": { "name": "dessert_tart_raspberry_richesse", "nameRu": "Малиновый тарт Richesse 🌿", "nameEn": "Tart Raspberry Richesse 🌿", "descRu": "Наш самый насыщенный десерт: сабле, ганаш из белого бельгийского шоколада с бурбонской ванилью, малиновый кули и свежие ягоды", "descEn": "Our richest and most intense dessert: sablé, white Belgian chocolate and bourbon vanilla ganache, raspberry coulis and fresh berries", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 10 },
+        "tart_pistachio": { "name": "dessert_tart_pistachio", "nameRu": "Тарт 100% Фисташка 🌿", "nameEn": "Tart 100% Pistachio 🌿", "descRu": "сабле, фисташковый заварной крем, ганаш из белого бельгийского шоколада, фисташковая паста и дроблёные фисташки", "descEn": "sablé, pistachio custard cream, white Belgian chocolate ganache, raw pistachio paste and crushed pistachios", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 20 },
+        "tart_hazelnut_caramel": { "name": "dessert_tart_hazelnut_caramel", "nameRu": "Тарт Фундук и карамель 🌿", "nameEn": "Tart Hazelnut & Caramel 🌿", "descRu": "сабле, домашняя сливочная карамель, обжаренный фундук и ганаш из бельгийского молочного шоколада", "descEn": "sablé, homemade butter caramel, roasted hazelnuts and Belgian milk chocolate ganache", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 30 },
+        "lemon_meringue_tart": { "name": "dessert_lemon_meringue_tart", "nameRu": "Лимонный тарт с меренгой 🌿", "nameEn": "Lemon Meringue Tart 🌿", "descRu": "сабле, домашний лимонный курд и обожжённая швейцарская меренга", "descEn": "sablé, homemade lemon curd and burnt Swiss meringue", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 40 },
+        "mango_passion_fruit_tart": { "name": "dessert_mango_passion_fruit_tart", "nameRu": "Тарт Манго и маракуйя 🌿", "nameEn": "Mango and Passion Fruit Tart 🌿", "descRu": "сабле, кокосовый франжипан, компоте из местного манго и маракуйи, манговый ганаш из бельгийского шоколада и гель из маракуйи", "descEn": "sablé, coconut frangipane, local mango and passion fruit compote, Belgian chocolate mango ganache and passion fruit gel", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 50 },
+        "cheesecake_san_sebastian": {
+          "name": "dessert_cheesecake_san_sebastian", "nameRu": "Чизкейк Сан-Себастьян 🌿", "nameEn": "Cheesecake San Sebastián 🌿",
+          "descRu": "бархатистый чизкейк с идеально запечённой корочкой и выразительным вкусом",
+          "descEn": "velvety smooth, perfectly charred and full of flavour",
+          "isGroup": true, "groupKey": "cheesecake_san_sebastian", "isActive": true, "sortOrder": 60,
+          "priceLabelRu": "€7", "priceLabelEn": "€7",
+          "variants": [
+            { "ru": "Солёная карамель и фундук", "en": "Salted Caramel & Hazelnuts", "name": "cheesecake_salted_caramel_hazelnuts", "price": 7 },
+            { "ru": "Ягодный гель и фисташки", "en": "Berry Gel & Pistachios", "name": "cheesecake_berry_gel_pistachios", "price": 7 }
+          ]
+        },
+        "pavlova": { "name": "dessert_pavlova", "nameRu": "Павлова 🌿", "nameEn": "Pavlova 🌿", "descRu": "меренга, сливочный крем и фруктовая начинка", "descEn": "meringue, cream and fruit filling", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 70 },
+        "tiramisu": { "name": "dessert_tiramisu", "nameRu": "Тирамису 🌿", "nameEn": "Tiramisu 🌿", "descRu": "классический тирамису с печеньем савоярди, маскарпоне, эспрессо из 100% арабики и трёхлетним мадейрским ромом", "descEn": "classic tiramisu with savoiardi biscuits, mascarpone, 100% Arabica espresso and three-year-old Madeiran rum", "price": 7, "isGroup": false, "isActive": true, "sortOrder": 80 },
+        "truffles": {
+          "name": "dessert_truffles", "nameRu": "Трюфели 🌿", "nameEn": "Truffles 🌿",
+          "isGroup": true, "groupKey": "truffles", "isActive": true, "sortOrder": 90,
+          "priceLabelRu": "€2", "priceLabelEn": "€2",
+          "variants": [
+            { "ru": "Тёмный шоколад и клюква", "en": "Dark Chocolate and Cranberry", "name": "truffle_dark_chocolate_cranberry", "price": 2, "descRu": "тёмный бельгийский шоколад, сливки и сушёная клюква", "descEn": "dark Belgian chocolate, cream and dried cranberries" },
+            { "ru": "Молочный шоколад и фундук", "en": "Milk Chocolate and Hazelnut", "name": "truffle_milk_chocolate_hazelnut", "price": 2, "descRu": "бельгийский молочный шоколад, сливки и обжаренный фундук", "descEn": "milk Belgian chocolate, cream and roasted hazelnuts" },
+            { "ru": "Фисташковый", "en": "Pistachio", "name": "truffle_pistachio", "price": 2, "descRu": "белый бельгийский шоколад, сливки, фисташковая паста и дроблёные фисташки", "descEn": "white Belgian chocolate, cream, pistachio paste and crushed pistachios" }
+          ]
+        },
+        "sorbets_ice_cream": { "name": "dessert_sorbets_ice_cream", "nameRu": "Домашние сорбеты и мороженое", "nameEn": "Homemade Sorbets and Ice Cream", "descRu": "спросите официанта", "descEn": "ask your waiter", "price": 6, "isGroup": false, "isActive": true, "sortOrder": 100 }
+      }
+    }
+  },
+  "newItemsForExistingCategories": {
+    "nomade_kombucha": {
+      "homemade_tea_kombucha": { "name": "kombucha_homemade_tea", "nameRu": "Домашняя чайная комбуча", "nameEn": "Homemade Tea Kombucha", "price": 3, "isGroup": false, "isActive": true, "sortOrder": 40 }
+    }
+  },
+  "newWines": [
+    { "name": "wine_sparkling_brut", "nameRu": "Игристое брют", "nameEn": "Bottle of Sparkling Brut", "descRu": "игристое брют", "descEn": "sparkling brut", "price": 24, "menuGroup": "easy_start", "color": "white", "style": "sparkling", "country": "Portugal" },
+    { "name": "wine_soalheiro_sparkling_verde", "nameRu": "Soalheiro игристое, Винью Верде", "nameEn": "Soalheiro Sparkling, Verde", "descRu": "игристое вино из региона Винью Верде", "descEn": "sparkling wine from Vinho Verde", "price": 30, "menuGroup": "easy_start", "color": "white", "style": "sparkling", "country": "Portugal", "region": "Vinho Verde" }
+  ]
+}

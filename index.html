@@ -7,6 +7,10 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<meta name="theme-color" content="#FAF9F5">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Nomade Waiter</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -21,8 +25,8 @@
 
 <div class="topbar">
   <div class="topbar-logo" id="appLogoArea">NOMADE</div>
-  <button id="langBtn" onclick="toggleLang()" style="background:var(--nomade-surface-raised);border:1px solid rgba(var(--nomade-green-rgb),0.4);color:var(--nomade-green-bright);padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;flex-shrink:0;letter-spacing:1px">EN</button>
-  <div id="deviceBadgeWrap" onclick="openDeviceRenameModal()" title="Tap to rename device" style="display:none;cursor:pointer;background:var(--nomade-surface-raised);border:1px solid rgba(var(--nomade-green-rgb),0.3);color:var(--nomade-muted);padding:3px 6px;border-radius:4px;font-size:9px;letter-spacing:0.3px;align-items:center;gap:2px;flex-shrink:0;white-space:nowrap;user-select:none;max-width:72px;min-width:0;overflow:hidden">📱<span id="deviceBadgeName" style="color:var(--nomade-green-bright);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1"></span></div>
+  <button id="langBtn" onclick="toggleLang()" style="background:var(--nomade-surface-raised);border:1px solid rgba(var(--nomade-olive-rgb),0.4);color:var(--nomade-text);font-weight:700;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;flex-shrink:0;letter-spacing:1px">EN</button>
+  <div id="deviceBadgeWrap" onclick="openDeviceRenameModal()" title="Tap to rename device" style="display:none;cursor:pointer;background:var(--nomade-surface-raised);border:1px solid rgba(var(--nomade-olive-rgb),0.3);color:var(--nomade-muted);padding:3px 6px;border-radius:4px;font-size:9px;letter-spacing:0.3px;align-items:center;gap:2px;flex-shrink:0;white-space:nowrap;user-select:none;max-width:72px;min-width:0;overflow:hidden">📱<span id="deviceBadgeName" style="color:var(--nomade-text);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1"></span></div>
   <div class="table-scroll-wrap">
     <div class="table-row">
       <span class="table-label" data-ru="СТОЛ:" data-en="TABLE:">СТОЛ:</span>
@@ -38,7 +42,7 @@
       <button class="table-btn" onclick="setTable(this)">10</button>
       <button class="table-btn" onclick="setTable(this)">11</button>
       <button class="table-btn" onclick="setTable(this)">12</button>
-      <button onclick="setTable(this)" id="table13btn" style="background:var(--nomade-red-dark);border:2px solid var(--nomade-red);color:var(--nomade-red-bright);padding:4px 10px;border-radius:4px;font-size:16px;cursor:pointer;flex-shrink:0;line-height:1" title="Стоп-лист">🛑</button>
+      <button onclick="setTable(this)" id="table13btn" style="background:var(--nomade-red-soft);border:2px solid var(--nomade-red);color:var(--nomade-red);padding:4px 10px;border-radius:4px;font-size:16px;cursor:pointer;flex-shrink:0;line-height:1" title="Стоп-лист">🛑</button>
       <button class="table-btn" onclick="setTable(this)">14</button>
       <button class="table-btn" onclick="setTable(this)">15</button>
       <button class="table-btn" onclick="setTable(this)">16</button>
@@ -105,19 +109,19 @@
         <button class="btn-action btn-clear" onclick="clearOrder()" id="clearBtn">Расчёт</button>
         <button class="btn-action btn-send" id="sendBtn" onclick="sendOrder()" disabled>В KEEPER</button>
       </div>
-      <button id="clearStopBtn" onclick="clearStopList()" style="display:none;margin-top:6px;width:100%;padding:8px;background:var(--nomade-red-dark);border:1px solid var(--nomade-red);color:var(--nomade-red-bright);border-radius:5px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer">🗑 ОЧИСТИТЬ ВЕСЬ СТОП-ЛИСТ</button>
+      <button id="clearStopBtn" onclick="clearStopList()" style="display:none;margin-top:6px;width:100%;padding:8px;background:var(--nomade-red-soft);border:1px solid var(--nomade-red);color:var(--nomade-red);border-radius:5px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer">🗑 ОЧИСТИТЬ ВЕСЬ СТОП-ЛИСТ</button>
       </div>
     </div>
   </div>
 </div>
 
 <div id="sideOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--nomade-surface);border:2px solid var(--nomade-green);border-radius:12px;padding:20px 16px;width:88%;max-width:340px;text-align:left">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--nomade-green-bright);letter-spacing:2px;margin-bottom:4px" data-ru="ГАРНИР" data-en="SIDE DISH">ГАРНИР</div>
-    <div id="sideMainName" style="font-size:12px;color:var(--nomade-orange);margin-bottom:8px;letter-spacing:1px"></div>
-    <div id="sideFreeNote" style="font-size:11px;color:var(--nomade-ivory);background:var(--nomade-surface-raised);padding:6px 10px;border-radius:4px;margin-bottom:12px"></div>
+  <div style="background:var(--nomade-surface);border:2px solid var(--nomade-olive);border-radius:12px;padding:20px 16px;width:88%;max-width:340px;text-align:left">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--nomade-olive);letter-spacing:2px;margin-bottom:4px" data-ru="ГАРНИР" data-en="SIDE DISH">ГАРНИР</div>
+    <div id="sideMainName" style="font-size:12px;font-weight:700;color:var(--nomade-text);margin-bottom:8px;letter-spacing:1px"></div>
+    <div id="sideFreeNote" style="font-size:11px;color:var(--nomade-text);background:var(--nomade-surface-raised);padding:6px 10px;border-radius:4px;margin-bottom:12px"></div>
     <div id="sideList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;max-height:50vh;overflow-y:auto"></div>
-    <button onclick="closeSidePicker()" style="background:var(--nomade-surface-raised);color:var(--nomade-muted);border:1px solid var(--nomade-green);border-radius:5px;padding:10px;width:100%;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer" data-ru="БЕЗ ГАРНИРА" data-en="NO SIDE DISH">БЕЗ ГАРНИРА</button>
+    <button onclick="closeSidePicker()" style="background:var(--nomade-surface-raised);color:var(--nomade-muted);border:1px solid var(--nomade-olive);border-radius:5px;padding:10px;width:100%;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer" data-ru="БЕЗ ГАРНИРА" data-en="NO SIDE DISH">БЕЗ ГАРНИРА</button>
   </div>
 </div>
 
@@ -280,7 +284,7 @@
       </div>
       <div class="wine-admin-field">
         <span class="wine-admin-label" data-ru="Категория" data-en="Category">Категория</span>
-        <select class="wine-admin-input" id="miaCategory" style="background:var(--nomade-surface-raised);color:var(--nomade-ivory);border:1px solid rgba(var(--nomade-green-rgb),0.3);font-family:'DM Mono',monospace;font-size:10px;padding:4px"></select>
+        <select class="wine-admin-input" id="miaCategory" style="background:var(--nomade-surface-raised);color:var(--nomade-text);border:1px solid rgba(var(--nomade-olive-rgb),0.3);font-family:'DM Mono',monospace;font-size:10px;padding:4px"></select>
       </div>
       <div class="wine-admin-field">
         <span class="wine-admin-label" data-ru="Актив." data-en="Active">Актив.</span>
@@ -311,7 +315,7 @@
       <button type="button" class="wine-admin-btn" onclick="categoryAdminNew()" data-ru="+ Новая" data-en="+ New">+ Новая</button>
       <button type="button" class="wine-admin-btn" onclick="closeCategoryAdmin()" data-ru="Закрыть" data-en="Close">Закрыть</button>
     </div>
-    <div id="catCreateForm" class="wine-admin-form-wrap" style="display:none;border-top:1px solid rgba(var(--nomade-green-rgb),0.2);">
+    <div id="catCreateForm" class="wine-admin-form-wrap" style="display:none;border-top:1px solid rgba(var(--nomade-olive-rgb),0.2);">
       <div class="wine-admin-field">
         <span class="wine-admin-label" data-ru="Назв. RU" data-en="RU name">Назв. RU</span>
         <input class="wine-admin-input" id="catNameRu" type="text">
@@ -336,23 +340,23 @@
 
 <!-- Device naming modal (first use) -->
 <div id="deviceNameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:99999;align-items:center;justify-content:center;">
-  <div style="background:var(--nomade-surface);border:2px solid var(--nomade-green);border-radius:12px;padding:28px 22px;width:90%;max-width:340px">
-    <div data-ru="Назовите это устройство" data-en="Name this device" style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--nomade-green-bright);letter-spacing:1px;margin-bottom:6px;text-align:center">Назовите это устройство</div>
+  <div style="background:var(--nomade-surface);border:2px solid var(--nomade-olive);border-radius:12px;padding:28px 22px;width:90%;max-width:340px">
+    <div data-ru="Назовите это устройство" data-en="Name this device" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--nomade-olive);letter-spacing:1px;margin-bottom:6px;text-align:center">Назовите это устройство</div>
     <div data-ru="Например: iPhone João, Bar iPad, Volodymyr, Kitchen tablet" data-en="For example: iPhone João, Bar iPad, Volodymyr, Kitchen tablet" style="font-size:10px;color:var(--nomade-muted);margin-bottom:16px;text-align:center;letter-spacing:0.3px;line-height:1.5">Например: iPhone João, Bar iPad, Volodymyr, Kitchen tablet</div>
-    <input id="deviceNameInput" type="text" autocomplete="off" style="width:100%;background:var(--nomade-charcoal);border:1px solid var(--nomade-green);color:var(--nomade-ivory);border-radius:5px;padding:11px 12px;font-family:'DM Mono',monospace;font-size:13px;outline:none;box-sizing:border-box;letter-spacing:0.5px" onkeydown="if(event.key==='Enter')saveDeviceName()" />
-    <button onclick="saveDeviceName()" data-ru="Сохранить" data-en="Save" style="width:100%;margin-top:12px;background:var(--nomade-green);color:var(--nomade-charcoal);font-weight:700;border:none;border-radius:5px;padding:13px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase">Сохранить</button>
-    <button onclick="cancelDeviceNameModal()" data-ru="Отмена" data-en="Cancel" style="width:100%;margin-top:8px;background:transparent;color:var(--nomade-muted);border:1px solid rgba(var(--nomade-green-rgb),0.3);border-radius:5px;padding:11px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer">Отмена</button>
+    <input id="deviceNameInput" type="text" autocomplete="off" style="width:100%;background:var(--nomade-bg);border:1px solid var(--nomade-olive);color:var(--nomade-text);border-radius:5px;padding:11px 12px;font-family:'DM Mono',monospace;font-size:13px;outline:none;box-sizing:border-box;letter-spacing:0.5px" onkeydown="if(event.key==='Enter')saveDeviceName()" />
+    <button onclick="saveDeviceName()" data-ru="Сохранить" data-en="Save" style="width:100%;margin-top:12px;background:var(--nomade-olive);color:var(--nomade-bg);font-weight:700;border:none;border-radius:5px;padding:13px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase">Сохранить</button>
+    <button onclick="cancelDeviceNameModal()" data-ru="Отмена" data-en="Cancel" style="width:100%;margin-top:8px;background:transparent;color:var(--nomade-muted);border:1px solid rgba(var(--nomade-olive-rgb),0.3);border-radius:5px;padding:11px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer">Отмена</button>
   </div>
 </div>
 
 <!-- Device rename modal -->
 <div id="deviceRenameModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:99999;align-items:center;justify-content:center;">
-  <div style="background:var(--nomade-surface);border:2px solid var(--nomade-green);border-radius:12px;padding:24px 20px;width:88%;max-width:340px">
-    <div data-ru="Переименовать устройство" data-en="Rename device" style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--nomade-green-bright);letter-spacing:1px;margin-bottom:14px;text-align:center">Переименовать устройство</div>
-    <input id="deviceRenameInput" type="text" autocomplete="off" style="width:100%;background:var(--nomade-charcoal);border:1px solid var(--nomade-green);color:var(--nomade-ivory);border-radius:5px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:13px;outline:none;box-sizing:border-box" onkeydown="if(event.key==='Enter')saveDeviceRename()" />
+  <div style="background:var(--nomade-surface);border:2px solid var(--nomade-olive);border-radius:12px;padding:24px 20px;width:88%;max-width:340px">
+    <div data-ru="Переименовать устройство" data-en="Rename device" style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--nomade-olive);letter-spacing:1px;margin-bottom:14px;text-align:center">Переименовать устройство</div>
+    <input id="deviceRenameInput" type="text" autocomplete="off" style="width:100%;background:var(--nomade-bg);border:1px solid var(--nomade-olive);color:var(--nomade-text);border-radius:5px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:13px;outline:none;box-sizing:border-box" onkeydown="if(event.key==='Enter')saveDeviceRename()" />
     <div style="display:flex;gap:8px;margin-top:12px">
-      <button onclick="closeDeviceRenameModal()" data-ru="Отмена" data-en="Cancel" style="flex:1;background:var(--nomade-surface-raised);color:var(--nomade-muted);border:1px solid rgba(var(--nomade-green-rgb),0.3);border-radius:5px;padding:11px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer">Отмена</button>
-      <button onclick="saveDeviceRename()" data-ru="Сохранить" data-en="Save" style="flex:2;background:var(--nomade-green);color:var(--nomade-charcoal);font-weight:700;border:none;border-radius:5px;padding:11px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase">Сохранить</button>
+      <button onclick="closeDeviceRenameModal()" data-ru="Отмена" data-en="Cancel" style="flex:1;background:var(--nomade-surface-raised);color:var(--nomade-muted);border:1px solid rgba(var(--nomade-olive-rgb),0.3);border-radius:5px;padding:11px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer">Отмена</button>
+      <button onclick="saveDeviceRename()" data-ru="Сохранить" data-en="Save" style="flex:2;background:var(--nomade-olive);color:var(--nomade-bg);font-weight:700;border:none;border-radius:5px;padding:11px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;cursor:pointer;text-transform:uppercase">Сохранить</button>
     </div>
   </div>
 </div>
