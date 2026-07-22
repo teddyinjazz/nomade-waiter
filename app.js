@@ -1442,8 +1442,13 @@
   // =============================================
   function toggleAcc(header) {
     header.classList.toggle('open');
-    const body = header.nextElementSibling;
-    body.classList.toggle('open');
+    // Look up .acc-body by selector, not header.nextElementSibling: the category
+    // description div (.acc-desc) sits between .acc-header and .acc-body for every
+    // custom category, so positional sibling lookup silently toggled the wrong
+    // element and .acc-body's display:none never lifted — hiding every item card
+    // in every category while the header's own arrow still visibly rotated.
+    const body = header.parentElement.querySelector('.acc-body');
+    if (body) body.classList.toggle('open');
   }
 
   function openAccByCat(cat) {
