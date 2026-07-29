@@ -1781,7 +1781,7 @@
       }
       return;
     }
-    const baseName = item.displayName || item.itemName || key;
+    const baseName = item.itemName || item.displayName || key;
     if (!orders['🛑'][baseName]) return;
     const prev = sentQty[currentTable] || {};
     const alreadySent = prev[key] || 0;
@@ -1810,7 +1810,7 @@
     const item = tableOrder[name];
 
     if (delta > 0) {
-      const baseName = item.displayName || item.itemName || name;
+      const baseName = item.itemName || item.displayName || name;
 
       if (currentTable !== '🛑' && !item.isSide && isEffectivelyStopped(baseName)) {
         alert(lang === 'ru' ? 'Позиция в стоп-листе' : 'Item is in the stop list');
@@ -1839,7 +1839,7 @@
       // Декремент стоп-листа при + (симметрично addItem)
       const _dsLinkCQ = !item.isSide ? findDerivedLinkByDerivedName(baseName) : null;
       if (currentTable !== '🛑' && _dsLinkCQ) {
-        consumeDerivedStock(baseName, item.price, _dsLinkCQ);
+        if (!consumeDerivedStock(baseName, item.price, _dsLinkCQ)) return;
       } else if (currentTable !== '🛑' && !item.isSide && orders['🛑'] && orders['🛑'][baseName] && orders['🛑'][baseName].qty > 0) {
         const _prevStopQtyG = orders['🛑'][baseName].qty;
         orders['🛑'][baseName].qty--;
